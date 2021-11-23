@@ -1,0 +1,83 @@
+/*
+	styles for reachability graph visualization
+	z-index: layer on which element lies (0 is below everything)
+*/
+
+/*
+TODO is there a more robust way than padding to include the
+sprites in the default view?
+*/ 
+graph {
+  padding: 40, 40;  
+}
+
+node { 
+  size-mode: fit;
+  shape: box;
+  fill-color: white;
+  stroke-mode: plain; 
+  padding: 6px, 4px;
+  text-offset: 0, 0;
+  text-size: 12;
+  text-background-mode: none;
+  shadow-mode: plain; 
+  shadow-width: 0px; 
+  shadow-offset: 0px;  
+}
+  
+node.initial {
+  fill-color: lightgray;
+  text-style: bold;
+}
+
+node:selected {
+  shadow-width: 3px;
+  shadow-color: limegreen;
+}
+
+node.problem {
+  fill-color: orange;
+}
+
+edge {
+  arrow-shape: arrow;  
+  text-offset: 0,-3; 
+  text-background-mode: plain;
+  text-size: 12;
+  shadow-mode: plain; 
+  shadow-width: 0px; 
+  shadow-offset: 0px;  
+}
+
+edge:selected {
+  shadow-mode: plain;
+  shadow-width: 3px;
+  shadow-color: limegreen; 
+  shadow-offset: 0px;
+}
+
+edge.highlight {
+  shadow-mode: plain;
+  shadow-width: 3px;
+  shadow-color: orange; 
+  shadow-offset: 0px;
+}
+
+sprite {
+  size-mode: fit; 
+  shape: box; 
+  fill-color: white; 
+  stroke-mode: none; 
+  padding: 6px, 4px;
+  text-offset: 0, 0;
+  text-size: 12;
+  text-background-mode: none;  
+}
+
+sprite.highlight {
+  shape: flow;
+  fill-color: orange;
+  size: 5px;
+  z-index: 0;
+  sprite-orientation: to;
+}

@@ -1,0 +1,57 @@
+/*
+	styles for petri net visualization
+	z-index: layer on which element lies (0 is below everything)
+*/
+
+
+/*
+TODO is there a more robust way than padding to include the
+sprites in the default view?
+*/ 
+graph {
+  padding: 40, 40;  
+}
+
+
+node {
+	size: 30px;	
+	stroke-mode: plain;	
+	stroke-width: 1px;
+	text-offset: 0,-2;
+	text-size: 12;
+}
+
+node.transition {
+  shape: rounded-box;
+  fill-mode: dyn-plain;
+  fill-color: grey, mediumseagreen;
+}
+
+node.transition:clicked {
+  fill-color: red;
+}
+
+node.place {
+  stroke-color: steelblue;
+  fill-color: lightskyblue;
+}
+
+node.place:selected {
+  fill-color: chocolate;
+  stroke-width: 3px;
+}
+
+edge {
+  arrow-shape: arrow;  
+  text-offset: 0,-3; 
+  text-background-mode: plain;
+  text-size: 12;
+}
+
+sprite {
+  fill-mode: none;
+  text-background-mode: rounded-box;
+  text-alignment: under;
+  text-offset: 0, 12;
+  text-size: 12;
+}
