@@ -79,15 +79,15 @@ public class PetriNetImpl implements PetriNet {
   public void addArc(String id, String source, String target)
       throws IllegalConnectionException, DuplicateElementException {
     SimplePetriNode sourceNode;
-    SimplePetriNode targetNode;
+    SimplePetriNode targetNode; 
     try {
       sourceNode = getNode(source);
       targetNode = getNode(target);
     } catch (ElementNotFoundException e) {
-      throw new IllegalConnectionException();
+      throw new IllegalConnectionException("Cannot create Arc, source or target does not exist.");
     }
     if (sourceNode.getType() == targetNode.getType()) {
-      throw new IllegalConnectionException();
+      throw new IllegalConnectionException("Cannot create Arc, source and target must be different node types.");
     }
 
     if (sourceNode.isTransition()) {
