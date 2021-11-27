@@ -1,6 +1,5 @@
 package de.feu.propra.controller;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -186,9 +185,9 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
   private void runBoundsCheck() {
     deleteGraph();
     var solver = new BoundednessSolver(getActiveNetController().getModel());
-    mainView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+    mainView.showWaitCursor();
     var result = solver.solve();
-    mainView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+    mainView.resetCursor();
     logger.info(result.toString());
     if (result.isBounded) {
       mainView.showPopup(bundle.getString("bounded_info"));
