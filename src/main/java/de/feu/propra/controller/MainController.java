@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -31,13 +32,13 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
   private Map<String, ReachabilityGraphController> graphControllers = new HashMap<>();
   private FileSelector fileSelector;
   private SwingTabManager tabManager = new SwingTabManager();
-  MainView mainView;
+  private MainView mainView;
   private static final Logger logger = Logger.getLogger(MainController.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
   /**
    * Constructs a {@code MainController} that listens to UI Events and sends
-   * feedback to the given {@code MainView}
+   * feedback to the given {@code MainView}.
    * 
    * @param view The {@code MainView} whose Actions are processed
    * @see MainViewAction
@@ -62,7 +63,7 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
   }
 
   /**
-   * Handles all {@code MainViewAction}
+   * Handles all {@code MainViewAction}s.
    */
   @Override
   public void actionPerformed(ActionEvent event) {
@@ -73,11 +74,6 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
     delegateAction((MainViewAction) source);
   }
 
-  /**
-   * Determines necessary steps to take, depending on the {@code caller}.
-   * 
-   * @param caller The MainViewAction item that triggered the event.
-   */
   private void delegateAction(MainViewAction caller) {
     switch (caller) {
     case OPEN_FILE -> openMultipleFiles();
@@ -115,11 +111,17 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
 
   private void openSingleFile(File file) {
     if (tabManager.hasTab(file)) {
-      tabManager.switchToTab(file);
+      try {
+        tabManager.switchToTab(file);
+      } catch (FileNotFoundException e) {
+        // silently fail, which should not happend since we checked before
+        return;
+      }
       mainView.setModifiedMarker(getActiveNetController().initialMarkingIsModified());
       return;
+    } else {
+      loadFile(file);
     }
-    loadFile(file);
   }
 
   private void loadFile(File file) {
@@ -203,8 +205,9 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
   }
 
   /**
+   * Sends necessary information to {@code MainView} for user feedback.
    * {@inheritDoc}
-   * Sends necessary information to {@code MainView} for user feedback. 
+   * 
    */
   @Override
   public void fileChanged(ActiveFileChangeEvent e) {

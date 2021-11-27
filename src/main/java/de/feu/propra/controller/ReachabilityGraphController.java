@@ -42,8 +42,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   // used for associating marking nodes in the view with its original marking
   private Map<String, Marking> markingsMap;
   private String currentLayout;
-  static final String STYLESHEET_REACHABILITY = "url(" + GraphFactory.class.getResource("/styles/reachability.css")
-      + ")";
+  private static final String STYLESHEET_REACHABILITY = "url("
+      + GraphFactory.class.getResource("/styles/reachability.css") + ")";
 
   /**
    * Constructor for a Controller for the given {@code ReachabilityGraph}
@@ -61,14 +61,15 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Reinitializes the controlled {@code ReachabilityGraph}
+   * Reinitializes the controlled {@code ReachabilityGraph}.
    */
   public void clearModel() {
     model.init();
   }
 
   /**
-   * Exposes the model to a caller.
+   * Exposes the model to a caller. Intended to be used when the model is needed
+   * in some non-interactive calculations.
    * 
    * @return The controlled {@code ReachabilityGraph} model
    */
@@ -82,8 +83,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Exposes the constructed view to a caller. Used to place that {@code View} in
-   * a parent ui container.
+   * Exposes the constructed view to a caller. Intended to be used to place that
+   * {@code View} in a parent UI container.
    * 
    * @return The GraphStream View Object that displays the underlying
    *         {@code ReachabilityGraph} model.
@@ -171,7 +172,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
 
   /**
    * Handles clicks in the {@code View}. Used to activate markings the the
-   * controlled {@code ReachabilityGraph}
+   * controlled {@code ReachabilityGraph}.
    *
    */
   @Override
@@ -206,13 +207,13 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
     for (var id : transitionIds) {
       // we know that the edges have ids like "MarkingTransitionID", but if we only
       // match the end, then an unfortunate "MarkingTransitionIDTransitionID" would
-      // also be matched, so we strip the node id, which is the markng string, from
+      // also be matched, so we strip the node id, which is the marking string, from
       // the edge label and do an equals comparison
       var nodeId = currentNode.getId();
       var edges = currentNode.leavingEdges().filter(e -> e.getId().replace(nodeId, "").equals(id))
           .collect(Collectors.toList());
       if (edges.size() != 1) {
-        throw new RuntimeException("Cannot find path in Graph View");
+        throw new RuntimeException("Cannot find path in Graph View.");
       }
       var e = edges.get(0);
       highlightEdge(e.getId());
@@ -225,9 +226,9 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Generated a unique edge id and inserts a new edge with that id into the
+   * Generates a unique edge id and inserts a new edge with that id into the
    * {@code View} between the given marking nodes. The label of the edge is set to
-   * the given edge. {@inheritDoc}
+   * the given {@code edgeLabel}. {@inheritDoc}
    */
   @Override
   public void edgeAdded(String edgeId, String edgeLabel, Marking source, Marking target) {
@@ -270,8 +271,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Highlights the last visited edge in the {@code View} as selected. The
-   * "edge:selected" from the style CSS of the @ {@code View} id used.
+   * Highlights the last visited edge in the {@code View} as selected. Uses the
+   * "edge:selected" from the style CSS of the {@code View}.
    * {@inheritDoc}
    */
   @Override
@@ -283,8 +284,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Highlights the given marking in the {@code View} as problematic. The node
-   * class "problem" has to be defined in the style CSS of the {@code View}
+   * Highlights the given marking in the {@code View} as problematic. Uses the
+   * "edge.problem" class from the style CSS of the {@code View}.
    * 
    * @param marking
    */

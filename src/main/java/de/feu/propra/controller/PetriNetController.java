@@ -38,7 +38,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   private PetriNet net; // the data model
   private Graph graph; // the view model (data model for the view)
   private View view; // the view
-  private Viewer viewer; // the view
+  private Viewer viewer;
   private boolean initialMarkingIsModified = false;
   private static final Logger logger = Logger.getLogger(PetriNetController.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
@@ -68,8 +68,8 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   }
 
   /**
-   * Exposes the constructed view to a caller. Used to place that {@code View} in
-   * a parent ui container.
+   * Exposes the constructed view to a caller. Intended to be used to place that
+   * {@code View} in a parent UI container.
    * 
    * @return The GraphStream View Object that displays the underlying
    *         {@code PetriNet} model.
@@ -86,7 +86,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   }
 
   /**
-   * Freezes the current Marking of the {@code PetriNet} as the initial Marking.
+   * Freezes the current marking of the {@code PetriNet} as the initial marking.
    */
   public void setCurrentMarkingAsInitial() {
     net.setCurrentMarkingAsInitial();
@@ -152,7 +152,8 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   }
 
   /**
-   * Exposes the model to a caller.
+   * Exposes the model to a caller. Intended to be used when the model is needed
+   * in non-interactive calculations.
    * 
    * @return The controlled {@code PetriNet} model
    */
@@ -203,7 +204,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
 
   /**
    * Triggers a reload of the underlying {@code PetriNet} model from its original
-   * file.
+   * file if there is one.
    */
   public void reloadModel() {
     net.reload();

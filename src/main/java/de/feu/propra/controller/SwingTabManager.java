@@ -2,6 +2,7 @@ package de.feu.propra.controller;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +16,17 @@ import javax.swing.event.ChangeListener;
 
 import org.graphstream.ui.view.View;
 
+import de.feu.propra.ui.MainViewAction;
 import de.feu.propra.ui.SwingTab;
 import de.feu.propra.util.UserLogHandler;
 
+/**
+ * Controller for a tabbed multi-document interface. Handles and propagates tab
+ * changes.
+ * 
+ * @author j-hap 
+ *
+ */
 public class SwingTabManager implements TabManager {
   private JTabbedPane tabContainer = new JTabbedPane(JTabbedPane.BOTTOM);
   private ArrayList<ActiveFileChangeListener> listeners = new ArrayList<>();
@@ -27,11 +36,18 @@ public class SwingTabManager implements TabManager {
   private Map<JComponent, Handler> logHandlers = new HashMap<>();
   private SwingTab lastActiveTab = null;
 
+  /**
+   * Constructor fot the Manager. Creates the Tab Pane and creates a default tab.
+   */
   public SwingTabManager() {
     createTabPane();
     addDefaultTab();
   }
 
+  /**
+   * @return The JComponent that containes all the tabs. Intended to be used to
+   *         place it in a parent UI component.
+   */
   public JComponent getTabContainer() {
     return tabContainer;
   }
@@ -68,10 +84,10 @@ public class SwingTabManager implements TabManager {
   }
 
   @Override
-  public void addTab(File file, View netView, View graphView) {
+  public void addTab(File file, View leftView, View rightView) {
     boolean removeDefaultTab = onlyDefaulTabIsOpen() && lastActiveTab.logIsEmpty();
 
-    var tab = new SwingTab(netView, graphView);
+    var tab = new SwingTab(leftView, rightView);
     // uses filename as key, because the hashCode of a File includes
     // file modification time
     String filename = "";
@@ -85,9 +101,9 @@ public class SwingTabManager implements TabManager {
     // creates a logger for this tab
 //    var logHandler = new UserLogHandler(tab.getLogArea());
     var logHandler = new UserLogHandler(tab.getLogPane());
-    logHandlers.put(tab, logHandler);    
+    logHandlers.put(tab, logHandler);
 
-    var tabComponent = new TabWithCloseButton(tabName, tabContainer);
+    var tabComponent = new TabWithXButton(tabName, tabContainer, MainViewAction.CLOSE_FILE.action);
 
     tabToFileMap.put(tab, filename);
     fileToTabMap.put(filename, tab);
@@ -122,11 +138,26 @@ public class SwingTabManager implements TabManager {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
-  public void switchToTab(File file) {
-    tabContainer.setSelectedComponent(fileToTabMap.get(file.getAbsolutePath()));
+  public void switchToTab(File file) throws FileNotFoundException {
+    var comp = fileToTabMap.get(file.getAbsolutePath());
+    if (comp == null) {
+      throw new FileNotFoundException();
+    }
+    tabContainer.setSelectedComponent(comp);
   }
 
+  /**
+   * Determines if the {@code TabManager} contains a tab assiciated to the given
+   * {@code File}.
+   * 
+   * @param file The {@code File} whose tab is of interest
+   * @return true if there is a tab associated with that {@code File}. False
+   *         otherwise.
+   */
   public boolean hasTab(File file) {
     return fileToTabMap.containsKey(file.getAbsolutePath());
   }
@@ -143,6 +174,9 @@ public class SwingTabManager implements TabManager {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addActiveFileChangeListener(ActiveFileChangeListener l) {
     listeners.add(l);
