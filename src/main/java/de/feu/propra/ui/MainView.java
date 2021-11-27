@@ -1,6 +1,7 @@
 package de.feu.propra.ui;
 
 import java.awt.BorderLayout;
+
 import java.awt.Cursor;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -20,9 +21,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
-import de.feu.propra.controller.MainController;
-
 /**
+ * The Main Window of the application as composition of Swing components.
+ * 
  * @author j-hap 
  */
 public class MainView {
@@ -30,8 +31,15 @@ public class MainView {
   JTabbedPane tabContainer;
   InfoDialog infoDialog;
   private StatusBar statusBar;
-  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.commands_and_tooltips", Settings.getLocale());
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.commands_and_tooltips",
+      Settings.getLocale());
 
+  /**
+   * Creates the {@code MainView} with the specified title. By default its
+   * position is centered on the screen and occupies 2 3rds of the screensize
+   * 
+   * @param title The title of the main window frame.
+   */
   public MainView(String title) {
     frame = new JFrame(title);
     frame.setIconImage(getImage("/icons/icons8-blockchain-technology-24.png"));
@@ -152,48 +160,67 @@ public class MainView {
     }
     infoDialog.setVisible(true);
   }
-  
+
+  /**
+   * Sets the message displayed in the status bar.
+   * 
+   * @param msg The message to be shown.
+   */
   public void setStatusMessage(String msg) {
     statusBar.setMessage(msg);
   }
 
+  /**
+   * If the modified marker is true, the statusbar contains a specific postfix.
+   * Used to tell the user, that the state of the current file differs from the
+   * state on disk.
+   * 
+   * @param status The modification status of the current file.
+   */
   public void setModifiedMarker(boolean status) {
     statusBar.setModifiedMarker(status);
   }
 
-  public void unmarkAsChanged() {
-    statusBar.setModifiedMarker(false);
-  }
-
-  public void markAsChanged() {
-    statusBar.setModifiedMarker(true);
-  }
-
+  /**
+   * Displays a popup message over the main window.
+   * 
+   * @param message The message to be shown in a popup.
+   */
   public void showPopup(String message) {
     JOptionPane.showMessageDialog(null, message, "Information", JOptionPane.INFORMATION_MESSAGE);
   }
 
-  public void setMediator(MainController m) {
-    MainViewAction.setActionListener(m);
-  }
-
+  /**
+   * Changes curser to the OS default wait cursor.
+   */
   public void showWaitCursor() {
     frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
   }
 
+  /**
+   * Resets curser to the OS default cursor.
+   */
   public void resetCursor() {
     frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
   }
 
+  /**
+   * Changes visibility state of the main window frame.
+   * 
+   * @param state New visibility state.s
+   */
   public void setVisible(boolean state) {
     frame.setVisible(state);
   }
 
-  public void setCenterPane(JComponent c) {
-    frame.add(c, BorderLayout.CENTER);
-  }
-
-  public void setCursor(Cursor predefinedCursor) {
-    frame.setCursor(predefinedCursor);    
+  /**
+   * Embeds the given {@code JComponent} as the center pane of the main window
+   * frame.
+   * 
+   * @param component The {@code JComponent} to embed. Replaces any previously
+   *                  embedded component.
+   */
+  public void setCenterPane(JComponent component) {
+    frame.add(component, BorderLayout.CENTER);
   }
 }

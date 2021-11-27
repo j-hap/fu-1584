@@ -23,6 +23,11 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 
+/**
+ * A Dialog to modify application settings.
+ * 
+ * @author j-hap 
+ */
 public class SettingsDialog implements ActionListener, ItemListener {
   private JDialog dialog;
   private JComboBox<Locale> langBox;
@@ -31,6 +36,11 @@ public class SettingsDialog implements ActionListener, ItemListener {
   private String selectedLayout = Settings.getReachabilityGraphLayoutMode();
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
+  /**
+   * Creates a new {@code SettingsDialog} places over the given {@code Frame}.
+   * 
+   * @param parent The parent frame over which the dialog is displayed.
+   */
   public SettingsDialog(Frame parent) {
     dialog = new JDialog(parent, bundle.getString("Settings"), false);
 
@@ -75,19 +85,17 @@ public class SettingsDialog implements ActionListener, ItemListener {
     dialog.setLocationRelativeTo(parent);
   }
 
-  private Container createLanguageOption() {    
-    
-    
-    var langs = Settings.getAvailableLanguages();    
+  private Container createLanguageOption() {
+    var langs = Settings.getAvailableLanguages();
     langBox = new JComboBox<Locale>(langs);
     langBox.setSelectedItem(Settings.getLocale());
     langBox.addActionListener(this);
     langBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-    
+
     var container = Box.createHorizontalBox();
     container.add(langBox);
     container.add(Box.createHorizontalGlue());
-    var warning = new JLabel( "(" + bundle.getString("requires_restart") + ")");
+    var warning = new JLabel("(" + bundle.getString("requires_restart") + ")");
     warning.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
     container.add(warning);
     container.setBorder(BorderFactory.createTitledBorder(bundle.getString("Language")));
@@ -118,13 +126,13 @@ public class SettingsDialog implements ActionListener, ItemListener {
       var b = new JRadioButton(o);
       b.setName(o);
       buttons.put(o, b);
-      layoutRadioGroup.add(b);      
+      layoutRadioGroup.add(b);
       if (o.equals(currentOption)) {
         b.setSelected(true);
-      }      
+      }
       b.addItemListener(this);
       vBox.add(b);
-    }    
+    }
     vBox.setAlignmentX(JComponent.LEFT_ALIGNMENT);
     var container = Box.createHorizontalBox();
     container.add(vBox);
@@ -134,17 +142,28 @@ public class SettingsDialog implements ActionListener, ItemListener {
     return container;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
     applyButton.setEnabled(true);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void itemStateChanged(ItemEvent e) {
     applyButton.setEnabled(true);
-    selectedLayout = ((JRadioButton)e.getSource()).getName();
+    selectedLayout = ((JRadioButton) e.getSource()).getName();
   }
 
+  /**
+   * Shows / hides the dialog.
+   * 
+   * @param status New visibility state.
+   */
   public void setVisible(boolean status) {
     applyButton.setEnabled(false);
     dialog.setVisible(status);
