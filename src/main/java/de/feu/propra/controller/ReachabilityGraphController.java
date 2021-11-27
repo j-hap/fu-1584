@@ -21,7 +21,6 @@ import org.graphstream.ui.view.util.InteractiveElement;
 
 import de.feu.propra.petrinet.reachability.Marking;
 import de.feu.propra.petrinet.reachability.ReachabilityGraph;
-import de.feu.propra.petrinet.view.GraphFactory;
 import de.feu.propra.petrinet.view.HierarchyLayout;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.ui.ZoomController;
@@ -42,8 +41,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   // used for associating marking nodes in the view with its original marking
   private Map<String, Marking> markingsMap;
   private String currentLayout;
-  private static final String STYLESHEET_REACHABILITY = "url("
-      + GraphFactory.class.getResource("/styles/reachability.css") + ")";
+  private static final String STYLESHEET = "url("
+      + ReachabilityGraphController.class.getResource("/styles/reachability.css") + ")";
 
   /**
    * Constructor for a Controller for the given {@code ReachabilityGraph}
@@ -103,7 +102,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   private void initViewModel(Marking initialMarking) {
-    viewModel.setAttribute("ui.stylesheet", STYLESHEET_REACHABILITY);
+    viewModel.setAttribute("ui.stylesheet", STYLESHEET);
     viewModel.setAttribute("ui.quality"); // more effort into nice visuals
     viewModel.setAttribute("ui.antialias"); // activates anti aliasing
     var s = initialMarking.toString();
@@ -272,8 +271,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
 
   /**
    * Highlights the last visited edge in the {@code View} as selected. Uses the
-   * "edge:selected" from the style CSS of the {@code View}.
-   * {@inheritDoc}
+   * "edge:selected" from the style CSS of the {@code View}. {@inheritDoc}
    */
   @Override
   public void edgeVisited(Marking source, String edgeId) {
