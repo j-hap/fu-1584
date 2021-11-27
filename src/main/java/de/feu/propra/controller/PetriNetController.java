@@ -7,6 +7,7 @@ import java.beans.PropertyChangeListener;
 import java.util.EnumSet;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -14,7 +15,10 @@ import java.util.stream.Collectors;
 import javax.swing.JPanel;
 
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.GraphFactory;
 import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.MultiGraph;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
@@ -22,8 +26,9 @@ import org.graphstream.ui.view.util.InteractiveElement;
 
 import de.feu.propra.petrinet.PetriNet;
 import de.feu.propra.petrinet.PetriNode;
+import de.feu.propra.petrinet.Place;
+import de.feu.propra.petrinet.Transition;
 import de.feu.propra.petrinet.util.TokenFormatter;
-import de.feu.propra.petrinet.view.GraphFactory;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.ui.ZoomController;
 
@@ -39,9 +44,11 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   private Graph graph; // the view model (data model for the view)
   private View view; // the view
   private Viewer viewer;
+  private SpriteManager spriteManager;
   private boolean initialMarkingIsModified = false;
   private static final Logger logger = Logger.getLogger(PetriNetController.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
+  private static final String STYLESHEET = "url(" + GraphFactory.class.getResource("/styles/net.css") + ")";
 
   /**
    * Constructor for a Controller for the given {@code PetriNet}
@@ -56,7 +63,46 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   }
 
   private void initGraph() {
-    graph = GraphFactory.create(net);
+    graph = new MultiGraph(UUID.randomUUID().toString());
+    graph.setAttribute("ui.stylesheet", STYLESHEET);
+    graph.setAttribute("ui.quality"); // more effort into nice visuals
+    graph.setAttribute("ui.antialias"); // activates anti aliasing
+
+    spriteManager = new SpriteManager(graph);
+    for (var petriNode : net.nodes()) {
+      var graphNode = graph.addNode(petriNode.getId());
+      formatNode(graphNode, petriNode);
+
+      var sprite = spriteManager.addSprite(petriNode.getId());
+      sprite.setAttribute("ui.label", petriNode.getLabel());
+      sprite.attachToNode(petriNode.getId());
+    }
+
+    for (var a : net.arcs()) {
+      var edge = graph.addEdge(a.getId(), a.getSourceId(), a.getTargetId(), true);
+      edge.setAttribute("ui.label", a.getLabel());
+    }
+  }
+
+  private void formatNode(Node graphNode, PetriNode petriNode) {
+    graphNode.setAttribute("xy", petriNode.getXPos(), -petriNode.getYPos());
+    graphNode.setAttribute("ui.class", petriNode.getType().toString().toLowerCase());
+
+    if (petriNode.isTransition()) {
+      var t = (Transition) petriNode;
+      formatTransition(graphNode, t.isActive());
+    } else if (petriNode.isPlace()) {
+      var p = (Place) petriNode;
+      formatPlace(graphNode, p.getTokenCount());
+    }
+  }
+
+  private void formatPlace(Node node, int tokenCount) {
+    node.setAttribute("ui.label", TokenFormatter.format(tokenCount));
+  }
+
+  private void formatTransition(Node node, boolean active) {
+    node.setAttribute("ui.color", active ? 1f : 0f);
   }
 
   private void initView() {
@@ -139,14 +185,13 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
     var node = (PetriNode) evt.getSource();
     switch (evt.getPropertyName()) {
     case "TokenCount":
-      graph.getNode(node.getId()).setAttribute("ui.label", TokenFormatter.format((Integer) evt.getNewValue()));
+      formatPlace(graph.getNode(node.getId()), (Integer) evt.getNewValue());
       break;
     case "ActiveState":
-      graph.getNode(node.getId()).setAttribute("ui.color", (Boolean) evt.getNewValue() ? 1f : 0f);
+      formatTransition(graph.getNode(node.getId()), (Boolean) evt.getNewValue());
       break;
     case "Label":
-      // TODO does this work? too dirty?
-      graph.setAttribute("ui.sprite." + node.getId() + ".label", (String) evt.getNewValue());
+      spriteManager.getSprite(node.getId()).setAttribute("label", (String) evt.getNewValue());
       break;
     }
   }
