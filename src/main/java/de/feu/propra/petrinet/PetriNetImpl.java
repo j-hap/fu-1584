@@ -79,7 +79,7 @@ public class PetriNetImpl implements PetriNet {
   public void addArc(String id, String source, String target)
       throws IllegalConnectionException, DuplicateElementException {
     SimplePetriNode sourceNode;
-    SimplePetriNode targetNode; 
+    SimplePetriNode targetNode;
     try {
       sourceNode = getNode(source);
       targetNode = getNode(target);

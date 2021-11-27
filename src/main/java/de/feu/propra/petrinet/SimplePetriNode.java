@@ -3,70 +3,122 @@ package de.feu.propra.petrinet;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * An abstract base class for all nodes of a {@code PetriNet}.
+ * 
+ * @author j-hap 
+ *
+ */
 public abstract class SimplePetriNode extends SimplePetriElement implements PetriNode {
-	private int xpos;
-	private int ypos;
-	String name;
-	private final NodeType type;
-	PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+  private int xpos;
+  private int ypos;
+  private String name;
+  private final NodeType type;
+  protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public void setPosition(int x, int y) {
-		xpos = x;
-		ypos = y;
-	}
+  /**
+   * Constructs a {@code SimplePetriNode} of the given {@code NodeType}.
+   * 
+   * @param id   ID of the constructed node.
+   * @param type {@code NodeType} of the constructed node.
+   */
+  public SimplePetriNode(String id, NodeType type) {
+    super(id);
+    this.type = type;
+  }
 
-	public void setName(String n) {
-		var oldName = name;
-		var oldLabel = getLabel();
-		name = n;
-		pcs.firePropertyChange("Label", oldLabel, getLabel());
-		pcs.firePropertyChange("Name", oldName, name);
-	}
-	
-	public String getName() {
-	  return name;
-	}
+  /**
+   * Stores x/y coordinates to be used when visualizing this
+   * {@code SimplePetriNode}.
+   * 
+   * @param x New x-coordinate of the {@code SimplePetriNode}. 
+   * @param y New y-coordinate of the {@code SimplePetriNode}.
+   */
+  public void setPosition(int x, int y) {
+    xpos = x;
+    ypos = y;
+  }
 
-	public SimplePetriNode(String id, NodeType t) {
-		super(id);
-		type = t;
-	}
+  /**
+   * Renames the {@code SimplePetriNode} and notifies any listeners about the
+   * change.
+   * 
+   * @param newName The new Name of the {@code SimplePetriNode}. 
+   */
+  public void setName(String newName) {
+    var oldName = name;
+    var oldLabel = getLabel();
+    name = newName;
+    pcs.firePropertyChange("Label", oldLabel, getLabel());
+    pcs.firePropertyChange("Name", oldName, name);
+  }
 
-	@Override
-	public boolean isPlace() {
-		return type == NodeType.PLACE;
-	}
+  /**
+   * @return The name of this {@code SimplePetriNode}.
+   */
+  public String getName() {
+    return name;
+  }
 
-	@Override
-	public boolean isTransition() {
-		return type == NodeType.TRANSITION;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isPlace() {
+    return type == NodeType.PLACE;
+  }
 
-	@Override
-	public NodeType getType() {
-		return type;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean isTransition() {
+    return type == NodeType.TRANSITION;
+  }
 
-	@Override
-	public int getXPos() {
-		return xpos;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public NodeType getType() {
+    return type;
+  }
 
-	@Override
-	public int getYPos() {
-		return ypos;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getXPos() {
+    return xpos;
+  }
 
-	@Override
-	public String getLabel() {
-		return super.getLabel() + " " + name;
-	}
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int getYPos() {
+    return ypos;
+  }
 
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
-		pcs.addPropertyChangeListener(listener);
-	}
-	
-	 public void removePropertyChangeListener(PropertyChangeListener listener) {
-	    pcs.removePropertyChangeListener(listener);
-	  }
+  /**
+   * {@inheritDoc} The name is appended to the ID.
+   */
+  @Override
+  public String getLabel() {
+    return super.getLabel() + " " + name;
+  }
+
+  /**
+   * @param listener The {@code PropertyChangeListener} to add.
+   */
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    pcs.addPropertyChangeListener(listener);
+  }
+
+  /**
+   * @param listener The {@code PropertyChangeListener} to remove.
+   */
+  public void removePropertyChangeListener(PropertyChangeListener listener) {
+    pcs.removePropertyChangeListener(listener);
+  }
 }
