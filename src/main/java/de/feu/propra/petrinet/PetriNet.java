@@ -13,10 +13,6 @@ import de.feu.propra.petrinet.reachability.ReachabilityGraph;
  * @author j-hap 
  *
  */
-/**
- * @author j-hap 
- *
- */
 public interface PetriNet {
   /**
    * Adds a {@code Place} to the net.
