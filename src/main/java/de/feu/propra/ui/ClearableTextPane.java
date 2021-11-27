@@ -8,13 +8,23 @@ import java.awt.event.MouseEvent;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextPane;
 
+/**
+ * A {@code JTextPane} that implements a right click popup menu to clear the
+ * content of the JTextPane.
+ * 
+ * @author j-hap 
+ *
+ */
 public class ClearableTextPane extends JTextPane {
   private static final long serialVersionUID = 1L;
   private final JPopupMenu rightClickMenu = new JPopupMenu();
 
+  /**
+   * Constructs the {@code ClearableTextPane}.
+   */
   public ClearableTextPane() {
     initRightClickMenu();
-		setEditable(false);
+    setEditable(false);
     setAutoscrolls(true);
     addMouseListener(new MouseAdapter() {
       @Override

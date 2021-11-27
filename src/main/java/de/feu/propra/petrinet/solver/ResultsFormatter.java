@@ -6,24 +6,49 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import de.feu.propra.controller.PetriNetController;
 import de.feu.propra.ui.Settings;
 
+/**
+ * Utility class for formatting a {@code List} of
+ * {@code BoundednessSolverResult} into a printable table.
+ * 
+ * @author j-hap 
+ *
+ */
 public class ResultsFormatter {
   private final int nHeaderLines = 2;
   private Appendable buffer;
   private List<List<String>> columns;
+  private static final Logger logger = Logger.getLogger(PetriNetController.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
+  /**
+   * Constructs a {@code ResultsFormatter} with a default {@code String} buffer.
+   */
   public ResultsFormatter() {
     this(new StringBuilder());
   }
 
-  public ResultsFormatter(Appendable a) {
-    buffer = a;
+  /**
+   * Constructs a {@code ResultsFormatter} with a given {@code String} buffer.
+   * 
+   * @param buffer The {@code Appendable} used a a String buffer.
+   */
+  public ResultsFormatter(Appendable buffer) {
+    this.buffer = buffer;
   }
 
+  /**
+   * Formats the given {@code List} of {@code BoundednessSolverResult} into a
+   * printable table.
+   * 
+   * @param results The {@code List} of {@code BoundednessSolverResult} to format.
+   * @return A reference to the {@code ResultsFormatter}.
+   */
   public ResultsFormatter format(List<BoundednessSolverResult> results) {
     initColumns(results.size());
 
@@ -40,7 +65,7 @@ public class ResultsFormatter {
     try {
       putColumnsIntoBuffer();
     } catch (IOException e) {
-      // TODO Auto-generated catch block
+      logger.severe("Failed to append to String buffer.");
     }
     return this;
   }
@@ -117,6 +142,11 @@ public class ResultsFormatter {
     return row.stream().collect(Collectors.joining("-|-"));
   }
 
+  /**
+   * Returns the formattes results in the buffer as a String.
+   * 
+   * @return The buffered String.
+   */
   public String toString() {
     return buffer.toString();
   }

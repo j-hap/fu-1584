@@ -185,11 +185,10 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
 
   private void runBoundsCheck() {
     deleteGraph();
-    var solver = new BoundednessSolver(getActiveNetController().getModel(), getActiveGraphController().getModel());
+    var solver = new BoundednessSolver(getActiveNetController().getModel());
     mainView.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-    solver.solve();
+    var result = solver.solve();
     mainView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    var result = solver.getResult();
     logger.info(result.toString());
     if (result.isBounded) {
       mainView.showPopup(bundle.getString("bounded_info"));

@@ -6,6 +6,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.swing.JPanel;
@@ -66,16 +67,6 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
     model.init();
   }
 
-  /**
-   * Exposes the model to a caller. Intended to be used when the model is needed
-   * in some non-interactive calculations.
-   * 
-   * @return The controlled {@code ReachabilityGraph} model
-   */
-  public ReachabilityGraph getModel() {
-    return model;
-  }
-
   private void initMarkingsMap(Marking initialMarking) {
     markingsMap = new HashMap<>();
     markingsMap.put(initialMarking.toString(), initialMarking);
@@ -98,7 +89,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   private void createViewModel() {
-    viewModel = new MultiGraph("rgraph", false, true); // reachability graph can have more than one edge between nodes
+    viewModel = new MultiGraph(UUID.randomUUID().toString(), false, true); // reachability graph can have more than one edge between nodes
   }
 
   private void initViewModel(Marking initialMarking) {
