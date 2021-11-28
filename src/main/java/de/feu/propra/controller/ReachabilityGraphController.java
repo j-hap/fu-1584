@@ -20,9 +20,9 @@ import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.util.InteractiveElement;
 
-import de.feu.propra.petrinet.reachability.Marking;
-import de.feu.propra.petrinet.reachability.ReachabilityGraph;
-import de.feu.propra.petrinet.view.HierarchyLayout;
+import de.feu.propra.reachability.Marking;
+import de.feu.propra.reachability.ReachabilityGraph;
+import de.feu.propra.ui.HierarchyLayout;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.ui.ZoomController;
 

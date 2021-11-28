@@ -11,9 +11,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.feu.propra.petrinet.reachability.Marking;
-import de.feu.propra.petrinet.reachability.ReachabilityGraph;
-import de.feu.propra.petrinet.reachability.ReachabilityGraphImpl;
+import de.feu.propra.reachability.Marking;
+import de.feu.propra.reachability.ReachabilityGraph;
+import de.feu.propra.reachability.ReachabilityGraphImpl;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.util.CheckedHashMap;
 import de.feu.propra.util.CheckedTreeMap;

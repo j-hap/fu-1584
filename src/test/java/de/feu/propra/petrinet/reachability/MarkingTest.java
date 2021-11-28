@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import de.feu.propra.reachability.Marking;
+
 class MarkingTest {
 
   @BeforeAll

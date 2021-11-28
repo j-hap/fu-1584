@@ -1,12 +1,12 @@
-package de.feu.propra.petrinet.solver;
+package de.feu.propra.solver;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
 import de.feu.propra.petrinet.PetriNet;
-import de.feu.propra.petrinet.reachability.Marking;
-import de.feu.propra.petrinet.reachability.ReachabilityGraph;
+import de.feu.propra.reachability.Marking;
+import de.feu.propra.reachability.ReachabilityGraph;
 
 /**
  * The {@code BoundednessSolver} is a utility class to run a boundedness check

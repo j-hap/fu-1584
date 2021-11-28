@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.reachability;
+package de.feu.propra.reachability;
 
 import java.util.List;
 

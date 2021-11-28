@@ -10,8 +10,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import de.feu.propra.petrinet.PetriNetImpl;
-import de.feu.propra.petrinet.solver.BatchSolver;
-import de.feu.propra.petrinet.solver.BoundednessSolver;
+import de.feu.propra.solver.BatchSolver;
+import de.feu.propra.solver.BoundednessSolver;
 import de.feu.propra.ui.MainView;
 import de.feu.propra.ui.MainViewAction;
 import de.feu.propra.ui.Settings;

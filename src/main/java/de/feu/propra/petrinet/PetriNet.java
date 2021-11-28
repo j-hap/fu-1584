@@ -3,8 +3,8 @@ package de.feu.propra.petrinet;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
 
-import de.feu.propra.petrinet.reachability.Marking;
-import de.feu.propra.petrinet.reachability.ReachabilityGraph;
+import de.feu.propra.reachability.Marking;
+import de.feu.propra.reachability.ReachabilityGraph;
 
 /**
  * Interface for a Petri Net model that allows creation and interaction as well
@@ -79,7 +79,7 @@ public interface PetriNet {
    * {@code Marking} object.
    * 
    * @return The current {@code Marking} of the {@code PetriNet}.
-   * @see de.feu.propra.petrinet.reachability.Marking
+   * @see de.feu.propra.reachability.Marking
    */
   public Marking getMarking();
 

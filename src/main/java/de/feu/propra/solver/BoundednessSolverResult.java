@@ -1,11 +1,11 @@
-package de.feu.propra.petrinet.solver;
+package de.feu.propra.solver;
 
 import java.io.File;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import de.feu.propra.petrinet.reachability.Marking;
+import de.feu.propra.reachability.Marking;
 import de.feu.propra.ui.Settings;
 
 /**

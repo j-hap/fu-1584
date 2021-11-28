@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.solver;
+package de.feu.propra.solver;
 
 import java.io.IOException;
 import java.util.ArrayList;

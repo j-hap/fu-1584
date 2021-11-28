@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.view;
+package de.feu.propra.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;

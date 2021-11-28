@@ -1,6 +1,6 @@
 package de.feu.propra.controller;
 
-import de.feu.propra.petrinet.reachability.Marking;
+import de.feu.propra.reachability.Marking;
 
 /**
  * The listener interface for receiving events on a {@code ReachabilityGraph}.
