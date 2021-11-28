@@ -19,10 +19,21 @@ import javax.swing.JPanel;
 
 import de.feu.propra.util.SystemInfo;
 
+/**
+ * A dialog to display some information about the application and the runtime
+ * environment.
+ * 
+ * @param parent
+ */
 public class InfoDialog {
   private JDialog dialog;
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
+  /**
+   * Creates an {@code InfoDialog} over the given {@code Frame}.
+   * 
+   * @param parent The {@code Frame} over which the Frame shall be displayed.
+   */
   public InfoDialog(Frame parent) {
     var labels = Box.createVerticalBox();
     labels.add(new JLabel(bundle.getString("cwd") + ":"));
@@ -81,6 +92,13 @@ public class InfoDialog {
     dialog.setLocationRelativeTo(parent);
   }
 
+  /**
+   * Shows or hides this {@code Dialog} depending on the value of parameter
+   * {@code status}.
+   * 
+   * @param status If {@code true}, makes the {@code Dialog} visible, otherwise
+   *               hides the {@code Dialog}.
+   */
   public void setVisible(boolean status) {
     dialog.setVisible(status);
   }

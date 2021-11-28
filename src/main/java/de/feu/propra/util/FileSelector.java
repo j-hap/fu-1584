@@ -50,7 +50,8 @@ public class FileSelector implements ActiveFileChangeListener {
    * Asks user to select a single file.
    * 
    * @return The selected file
-   * @throws FileSelectionAbortedException
+   * @throws FileSelectionAbortedException If the user clicks cancel in the
+   *                                       {@code JFileChooser}.
    */
   public File getUserSelection() throws FileSelectionAbortedException {
     fileChooser.setMultiSelectionEnabled(false);

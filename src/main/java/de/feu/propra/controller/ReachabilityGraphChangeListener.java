@@ -3,12 +3,11 @@ package de.feu.propra.controller;
 import de.feu.propra.petrinet.reachability.Marking;
 
 /**
- * The listener interface for receiving events on a {@code ReachabilityGraph}
+ * The listener interface for receiving events on a {@code ReachabilityGraph}.
  * Controllers that monitor changes on a model and propagate them to a view
  * should implement this interface and be registered using the model's
  * {@code addChangeListener} method.
  *
- * @see ReachabilityGraph
  *
  * @author j-hap 
  */

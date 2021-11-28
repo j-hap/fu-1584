@@ -1,7 +1,6 @@
 package de.feu.propra.ui;
 
 import java.awt.BorderLayout;
-
 import java.awt.Cursor;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -18,7 +17,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 /**
@@ -27,9 +25,8 @@ import javax.swing.JToolBar;
  * @author j-hap 
  */
 public class MainView {
-  JFrame frame;
-  JTabbedPane tabContainer;
-  InfoDialog infoDialog;
+  private JFrame frame;
+  private InfoDialog infoDialog;
   private StatusBar statusBar;
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.commands_and_tooltips",
       Settings.getLocale());

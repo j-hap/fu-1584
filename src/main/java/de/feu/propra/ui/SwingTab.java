@@ -17,8 +17,8 @@ import org.graphstream.ui.view.View;
  */
 public class SwingTab extends JSplitPane {
   private static final long serialVersionUID = 1L;
-  JSplitPane netAndGraphPane;
-  JTextPane logPane;
+  private JSplitPane netAndGraphPane;
+  private JTextPane logPane;
 
   /**
    * Creates a SwingTab that displays the given {@code GraphStream} {@code View}s.

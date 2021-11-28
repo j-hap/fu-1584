@@ -107,7 +107,8 @@ public interface PetriNet {
   Collection<Arc> arcs();
 
   /**
-   * Increases the initial token count of a {@code Place} by one.
+   * Increases the initial token count of a {@code Place} by one. Does nothing if
+   * a {@code Place} with the given ID is not present in the {@code PetriNet}
    * 
    * @param id Unique ID of the {@code PetriNode} to be modified.
    * @return True of success, false if not.
@@ -115,7 +116,8 @@ public interface PetriNet {
   boolean addToken(String id);
 
   /**
-   * Decreases the initial token count of a {@code Place} by one.
+   * Decreases the initial token count of a {@code Place} by one. Does nothing if
+   * a {@code Place} with the given ID is not present in the {@code PetriNet}
    * 
    * @param id Unique ID of the {@code PetriNode} to be modified.
    * @return True of success, false if not.

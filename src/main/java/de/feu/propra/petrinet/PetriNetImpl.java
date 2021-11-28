@@ -20,6 +20,14 @@ import de.feu.propra.petrinet.util.DuplicateElementException;
 import de.feu.propra.petrinet.util.SimplePnmlParser;
 import de.feu.propra.ui.Settings;
 
+/**
+ * A concrete implementation of the {@code PetriNet} interface. It creates its
+ * own {@code ReachabilityGraph} to track the visited markings. A
+ * {@code PetriNetImpl} may be constructed from a PNML file.
+ * 
+ * @author j-hap 
+ *
+ */
 public class PetriNetImpl implements PetriNet {
   // sorted map, because a marking contains tokens in order of place id
   SortedMap<String, Place> places;
@@ -32,23 +40,30 @@ public class PetriNetImpl implements PetriNet {
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
   private boolean unboundedWarningWasShown = false;
 
-  PetriNetImpl() {
-    // constructor to start from scratch
+  /**
+   * Constructor to start a new {@code PetriNetImpl} from scratch.
+   */
+  public PetriNetImpl() {
     places = new CheckedTreeMap<>();
     transitions = new CheckedHashMap<>();
     arcs = new CheckedHashMap<>();
     rGraph = new ReachabilityGraphImpl(this);
   }
 
-  public PetriNetImpl(File f) {
+  /**
+   * Constructor to create a {@code PetriNetImpl} from a PNML file.
+   * 
+   * @param file A PNML file from which the {@code PetriNetImpl} shall be loaded.
+   */
+  public PetriNetImpl(File file) {
     this();
     // parser swallows file not found exception, so we test for it here
     // to give better feedback
-    if (!f.exists()) {
-      logger.warning("File " + f.getAbsolutePath() + " not found.");
+    if (!file.exists()) {
+      logger.warning("File " + file.getAbsolutePath() + " not found.");
       return;
     }
-    file = f;
+    this.file = file;
     loadFromFile(true);
   }
 
@@ -63,18 +78,27 @@ public class PetriNetImpl implements PetriNet {
     rGraph.init();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addPlace(String id) throws DuplicateElementException {
     var p = new Place(id);
     places.put(id, p);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addTransition(String id) throws DuplicateElementException {
     var t = new Transition(id);
     transitions.put(id, t);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addArc(String id, String source, String target)
       throws IllegalConnectionException, DuplicateElementException {
@@ -103,16 +127,25 @@ public class PetriNetImpl implements PetriNet {
     arcs.put(id, new Arc(id, sourceNode, targetNode));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setNodeName(String id, String name) throws ElementNotFoundException {
     getNode(id).setName(name);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setNodePosition(String id, int x, int y) throws ElementNotFoundException {
     getNode(id).setPosition(x, y);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setInitialTokens(String id, int nTokens) throws ElementNotFoundException {
     if (places.containsKey(id)) {
@@ -122,12 +155,18 @@ public class PetriNetImpl implements PetriNet {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Marking getMarking() {
     var tokenCount = places.values().stream().map(Place::getTokenCount).toArray(Integer[]::new);
     return new Marking(tokenCount);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setMarking(Marking m) {
     if (m.equals(getMarking())) {
@@ -141,6 +180,9 @@ public class PetriNetImpl implements PetriNet {
     rGraph.markingChanged(m);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void triggerTransition(String id) {
     if (!isTransition(id)) {
@@ -160,32 +202,51 @@ public class PetriNetImpl implements PetriNet {
     isInInitialState = false;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean isBounded() {
     return rGraph.isBounded();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<PetriNode> nodes() {
     var nodes = Stream.concat(places.values().stream(), transitions.values().stream()).collect(Collectors.toList());
     return Collections.unmodifiableCollection(nodes);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<Arc> arcs() {
     return Collections.unmodifiableCollection(arcs.values());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean addToken(String id) {
-    // TODO test if id exists?
+    if (!places.containsKey(id)) {
+      return false;
+    }
     places.get(id).addToken();
     return true;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean removeToken(String id) {
-    // TODO test if id exists?
+    if (!places.containsKey(id)) {
+      return false;
+    }
     var p = places.get(id);
     if (p.hasTokens()) {
       p.removeToken();
@@ -196,6 +257,9 @@ public class PetriNetImpl implements PetriNet {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void setCurrentMarkingAsInitial() {
     places.values().forEach(Place::setCurrentTokensAsInitial);
@@ -203,18 +267,27 @@ public class PetriNetImpl implements PetriNet {
     rGraph.init();
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void addNodePropertyChangeListener(PropertyChangeListener listener) {
     places.values().forEach(p -> p.addPropertyChangeListener(listener));
     transitions.values().forEach(t -> t.addPropertyChangeListener(listener));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void removeNodePropertyChangeListener(PropertyChangeListener listener) {
     places.values().forEach(p -> p.removePropertyChangeListener(listener));
     transitions.values().forEach(t -> t.removePropertyChangeListener(listener));
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void resetPlaces() {
     if (isInInitialState) {
@@ -225,6 +298,9 @@ public class PetriNetImpl implements PetriNet {
     rGraph.markingChanged(getMarking());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void reload() {
     if (file == null) {
@@ -238,12 +314,18 @@ public class PetriNetImpl implements PetriNet {
     loadFromFile(false);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Collection<String> getActiveTransitionIds() {
     return transitions.values().stream().filter(Transition::isActive).map(Transition::getId)
         .collect(Collectors.toList());
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean isTransition(String id) {
     return transitions.containsKey(id);
@@ -259,6 +341,9 @@ public class PetriNetImpl implements PetriNet {
     }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public ReachabilityGraph getReachabilityGraph() {
     return rGraph;
