@@ -29,13 +29,13 @@ public class UserLogHandler extends Handler {
 
   /**
    * Constructor. The resulting {@code Handler} has a log level of
-   * {@code Level.WARNING}, a {@code UserLogFormatter}, and no {@code Filter}.
+   * {@code Level.INFO}, a {@code UserLogFormatter}, and no {@code Filter}.
    * 
    * @param outPane the output pane to display log messages
    */
   public UserLogHandler(JEditorPane outPane) {
     setOutPane(outPane);
-    setLevel(Level.WARNING);
+    setLevel(Level.INFO);
     setFormatter(formatter);
     restoreDefaultColors();
   }
