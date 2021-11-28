@@ -86,6 +86,9 @@ public class SwingTabManager implements TabManager {
   @Override
   public void addTab(File file, View leftView, View rightView) {
     boolean removeDefaultTab = onlyDefaulTabIsOpen() && lastActiveTab.logIsEmpty();
+    if (removeDefaultTab) {
+      closeTab(fileToTabMap.get(""));
+    }
 
     var tab = new SwingTab(leftView, rightView);
     // uses filename as key, because the hashCode of a File includes
@@ -99,7 +102,6 @@ public class SwingTabManager implements TabManager {
     tab.setName(tabName);
 
     // creates a logger for this tab
-//    var logHandler = new UserLogHandler(tab.getLogArea());
     var logHandler = new UserLogHandler(tab.getLogPane());
     logHandlers.put(tab, logHandler);
 
@@ -114,16 +116,19 @@ public class SwingTabManager implements TabManager {
     // swing does not automatically switch to new tabs
     tabContainer.setSelectedIndex(iTab);
     lastActiveTab = tab;
-
-    if (removeDefaultTab) {
-      closeTab(fileToTabMap.get(""));
-    }
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void closeCurrentTab() {
     var tab = tabContainer.getSelectedComponent();
     closeTab(tab);
+    // at least one tab is needed
+    if (tabContainer.getTabCount() == 0) {
+      addDefaultTab();
+    }
   }
 
   private void closeTab(Component tab) {
@@ -132,10 +137,6 @@ public class SwingTabManager implements TabManager {
     tabToFileMap.remove(tab);
     logHandlers.remove(tab);
     fileToTabMap.remove(fileToClose);
-    // at least one tab is needed
-    if (tabContainer.getTabCount() == 0) {
-      addDefaultTab();
-    }
   }
 
   /**

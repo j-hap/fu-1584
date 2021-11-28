@@ -16,7 +16,8 @@ public interface TabManager {
 
   /**
    * Adds a new Tab to display the given two {@code View}s. And an assiciated log
-   * pane.
+   * pane. If a default tab is open but does not contain any information, it is
+   * replaced by the new tab.
    * 
    * @param file      The file to which the new tab is associated
    * @param leftView  The top left {@code View} to display.
@@ -25,7 +26,8 @@ public interface TabManager {
   void addTab(File file, View leftView, View rightView);
 
   /**
-   * Deletes the current Tab and the associated objects.
+   * Deletes the current Tab and the associated objects. If the last tab is
+   * closed, a default tab is created.
    */
   void closeCurrentTab();
 
