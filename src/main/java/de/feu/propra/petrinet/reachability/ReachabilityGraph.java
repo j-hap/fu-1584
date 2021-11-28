@@ -40,7 +40,8 @@ public interface ReachabilityGraph {
    * {@code ReachabilityGraph}.
    * 
    * @param newMarking The {@code Marking} to set active.
-   * @throws IllegalStateException
+   * @throws IllegalStateException If the Marking is not present in the
+   *                               {@code ReachabilityGraph}.
    */
   void setActiveMarking(Marking newMarking);
 

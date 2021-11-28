@@ -14,6 +14,9 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
   private int ypos;
   private String name;
   private final NodeType type;
+  /**
+   * utility class to emit property change events.
+   */
   protected PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
   /**
@@ -31,7 +34,7 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * Stores x/y coordinates to be used when visualizing this
    * {@code SimplePetriNode}.
    * 
-   * @param x New x-coordinate of the {@code SimplePetriNode}. 
+   * @param x New x-coordinate of the {@code SimplePetriNode}.
    * @param y New y-coordinate of the {@code SimplePetriNode}.
    */
   public void setPosition(int x, int y) {
@@ -43,7 +46,7 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * Renames the {@code SimplePetriNode} and notifies any listeners about the
    * change.
    * 
-   * @param newName The new Name of the {@code SimplePetriNode}. 
+   * @param newName The new Name of the {@code SimplePetriNode}.
    */
   public void setName(String newName) {
     var oldName = name;

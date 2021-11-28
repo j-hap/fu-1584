@@ -18,8 +18,8 @@ public interface TabManager {
    * Adds a new Tab to display the given two {@code View}s. And an assiciated log
    * pane.
    * 
-   * @param file The file to which the new tab is associated
-   * @param leftView The top left {@code View} to display.
+   * @param file      The file to which the new tab is associated
+   * @param leftView  The top left {@code View} to display.
    * @param rightView the top right {@code View} to display.
    */
   void addTab(File file, View leftView, View rightView);
@@ -34,8 +34,9 @@ public interface TabManager {
    * FileNotFoundException when the TabManager has no tab for the given
    * {@code File}.
    * 
-   * @param file
-   * @throws FileNotFoundException
+   * @param file The {@code File}, whose a associated tab shall be shown.
+   * @throws FileNotFoundException If the tab, associated with {@code File} does
+   *                               not exist.
    */
   void switchToTab(File file) throws FileNotFoundException;
 
@@ -43,7 +44,8 @@ public interface TabManager {
    * Adds a listener, that is notified when the active tab and therefore active
    * file changes.
    * 
-   * @param listener
+   * @param listener The {@code ActiveFileChangeListener} that reacts to change of
+   *                 the active file.
    */
   void addActiveFileChangeListener(ActiveFileChangeListener listener);
 }

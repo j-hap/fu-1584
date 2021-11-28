@@ -22,8 +22,6 @@ import de.feu.propra.util.SystemInfo;
 /**
  * A dialog to display some information about the application and the runtime
  * environment.
- * 
- * @param parent
  */
 public class InfoDialog {
   private JDialog dialog;

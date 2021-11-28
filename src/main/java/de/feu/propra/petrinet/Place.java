@@ -26,7 +26,8 @@ public class Place extends SimplePetriNode {
    * Removes a token. Throws an exeption instead, if the token count would become
    * negative. Any listener if notified of this change.
    * 
-   * @throws IllegalStateException
+   * @throws IllegalStateException If the number of tokens would become negative
+   *                               if another token was removed.
    */
   void removeToken() throws IllegalStateException {
     if (nTokens == 0) {
@@ -68,6 +69,8 @@ public class Place extends SimplePetriNode {
 
   /**
    * Sets the number of tokens the {@code Place} currently holds.
+   * 
+   * @param n The new token count.
    */
   void setTokenCount(int n) {
     tokensChanged(nTokens, nTokens = n);
@@ -103,7 +106,7 @@ public class Place extends SimplePetriNode {
   }
 
   /**
-   * {@inheritDoc} Appends the current token count in <>.
+   * {@inheritDoc} Appends the current token count in &lt;&gt;.
    */
   @Override
   public String getLabel() {

@@ -25,7 +25,7 @@ public class BatchSolver {
   /**
    * Constructor for a BatchSolver for the given {@code File}s.
    * 
-   * @param fileList
+   * @param fileList The {@code File}s to analyze.
    */
   public BatchSolver(File[] fileList) {
     files = fileList;

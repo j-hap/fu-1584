@@ -8,8 +8,17 @@ package de.feu.propra.petrinet;
  *
  */
 public class ArcPlan {
+  /**
+   * ID of the {@code Arc} to create.
+   */
   public final String id;
+  /**
+   * ID of the source {@code PetriNode} of {@code Arc} to create.
+   */
   public final String sourceId;
+  /**
+   * ID of the target {@code PetriNode} of {@code Arc} to create.
+   */
   public final String targetId;
 
   /**

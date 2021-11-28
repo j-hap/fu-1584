@@ -19,17 +19,17 @@ public class CheckedTreeMap<K, V> extends TreeMap<K, V> {
    * previously contained a mapping for the key, it throws a
    * {@code DuplicateElementException}.
    *
-   * @param key   key with which the specified value is to be associated
-   * @param value value to be associated with the specified key
+   * @param k Key with which the specified value is to be associated.
+   * @param v Value to be associated with the specified key.
    *
-   * @return the value associated with {@code key}.
-   * @throws ClassCastException        if the specified key cannot be compared
-   *                                   with the keys currently in the map
-   * @throws NullPointerException      if the specified key is null and this map
+   * @return The value associated with {@code key}.
+   * @throws ClassCastException        If the specified key cannot be compared
+   *                                   with the keys currently in the map.
+   * @throws NullPointerException      If the specified key is null and this map
    *                                   uses natural ordering, or its comparator
-   *                                   does not permit null keys
-   * @throws DuplicateElementException if the specified key is already contained
-   *                                   in the map
+   *                                   does not permit null keys.
+   * @throws DuplicateElementException If the specified key is already contained
+   *                                   in the map.
    */
   @Override
   public V put(K k, V v) {

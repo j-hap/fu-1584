@@ -8,5 +8,12 @@ package de.feu.propra.petrinet;
  *
  */
 public enum NodeType {
-  PLACE, TRANSITION;
+  /**
+   * A Petri Net {@code Place}, that hold tokens.
+   */
+  PLACE, //
+  /**
+   * A Petri Net {@code Transition}, that redistributes tokens.
+   */
+  TRANSITION;
 }

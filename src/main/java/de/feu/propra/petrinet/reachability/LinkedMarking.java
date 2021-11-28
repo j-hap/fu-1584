@@ -48,7 +48,7 @@ public class LinkedMarking extends Marking {
    * Adds an outgoing {@code Edge} to this {@code Marking}. The {@code Edge} is
    * constructed from the given ID and target {@code LinkedMarking}.
    *
-   * @param label  The label of the constructed {@code Edge}.
+   * @param id     The ID of the constructed {@code Edge}.
    * @param target The target element of the constructed {@code Edge}.
    */
   public void addOutEdge(String id, LinkedMarking target) {
@@ -60,16 +60,16 @@ public class LinkedMarking extends Marking {
    * 
    * @param edge The {@code Edge} to add.
    */
-  public void addInEdge(Edge<LinkedMarking> e) {
-    inEdges.add(e);
+  public void addInEdge(Edge<LinkedMarking> edge) {
+    inEdges.add(edge);
   }
 
   /**
    * Adds an incoming {@code Edge} to this {@code Marking}. The {@code Edge} is
    * constructed from the given ID and target {@code LinkedMarking}.
    *
-   * @param label  The label of the constructed {@code Edge}.
-   * @param target The target element of the constructed {@code Edge}.
+   * @param id     The ID of the constructed {@code Edge}.
+   * @param source The source element of the constructed {@code Edge}.
    */
   public void addInEdge(String id, LinkedMarking source) {
     addInEdge(new Edge<LinkedMarking>(id, source));
@@ -92,12 +92,13 @@ public class LinkedMarking extends Marking {
    * {@code LinkedMarking}. The {@code Edge} is constructed from the given ID and
    * target {@code LinkedMarking}.
    * 
-   * @param edge The {@code Edge} to check.
+   * @param id     The ID of {@code Edge} whose existence shall be checked.
+   * @param target The target element of the labeled {@code Edge} to check.
    * @return True if given {@code Edge} is already an outgoing edge. False
    *         otherwise.
    */
-  public boolean hasOutEdge(String id, LinkedMarking source) {
-    return hasOutEdge(new Edge<LinkedMarking>(id, source));
+  public boolean hasOutEdge(String id, LinkedMarking target) {
+    return hasOutEdge(new Edge<LinkedMarking>(id, target));
   }
 
   /**

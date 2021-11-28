@@ -30,9 +30,9 @@ import de.feu.propra.ui.Settings;
  */
 public class PetriNetImpl implements PetriNet {
   // sorted map, because a marking contains tokens in order of place id
-  SortedMap<String, Place> places;
-  Map<String, Transition> transitions;
-  Map<String, Arc> arcs;
+  private SortedMap<String, Place> places;
+  private Map<String, Transition> transitions;
+  private Map<String, Arc> arcs;
   private ReachabilityGraph rGraph;
   private boolean isInInitialState = true;
   private File file;

@@ -34,7 +34,10 @@ public interface PetriNet {
    * @param id     Unique ID of the {@code Arc} to be added.
    * @param source Unique ID of the source {@code PetriNode}.
    * @param target Unique ID of the target {@code PetriNode}.
-   * @throws IllegalConnectionException
+   * @throws IllegalConnectionException When either source or target
+   *                                    {@code PetriNode} does not exist or the
+   *                                    types of the {@code PetriNode}s to be
+   *                                    connected are equal.
    */
   void addArc(String id, String source, String target) throws IllegalConnectionException;
 
@@ -43,7 +46,8 @@ public interface PetriNet {
    * 
    * @param id   Unique ID of the {@code PetriNode} to be renamed.
    * @param name New Name of the {@code PetriNode}.
-   * @throws ElementNotFoundException
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
   void setNodeName(String id, String name) throws ElementNotFoundException;
 
@@ -54,7 +58,8 @@ public interface PetriNet {
    * @param id Unique ID of the {@code PetriNode} to be repositioned.
    * @param x  x-coordinate of the {@code PetriNode}.
    * @param y  y-coordinate of the {@code PetriNode}.
-   * @throws ElementNotFoundException
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
   void setNodePosition(String id, int x, int y) throws ElementNotFoundException;
 
@@ -64,7 +69,8 @@ public interface PetriNet {
    * @param id      Unique ID of the {@code PetriNode} to be modified.
    * @param nTokens Number of Tokens that {@code PetriNode} shall have as its
    *                initial token count.
-   * @throws ElementNotFoundException
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
   void setInitialTokens(String id, int nTokens) throws ElementNotFoundException;
 

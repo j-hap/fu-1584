@@ -65,7 +65,7 @@ public class Marking implements Comparable<Marking> {
 
   /**
    * Implements the m &lt;-&gt; m' comparison of two {@code Marking}s. A {@code Marking}
-   * is &gt than another if at least one token count if bigger that another and all
+   * is &gt; than another if at least one token count if bigger that another and all
    * others are equal. Does not check for equal size of the underlying token count
    * array and might throw an IndexOutOfBoundsException when used with wrong
    * inputs. This cannot happen when all {@code Markings} come from the same

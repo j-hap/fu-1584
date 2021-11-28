@@ -89,7 +89,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   private void createViewModel() {
-    viewModel = new MultiGraph(UUID.randomUUID().toString(), false, true); // reachability graph can have more than one edge between nodes
+    viewModel = new MultiGraph(UUID.randomUUID().toString(), false, true); // reachability graph can have more than one
+                                                                           // edge between nodes
   }
 
   private void initViewModel(Marking initialMarking) {
@@ -276,7 +277,8 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
    * Highlights the given marking in the {@code View} as problematic. Uses the
    * "edge.problem" class from the style CSS of the {@code View}.
    * 
-   * @param marking
+   * @param marking The {@code Marking} that shall be highlighted in the
+   *                {@code View}.
    */
   public void markProblem(Marking marking) {
     viewModel.getNode(marking.toString()).setAttribute("ui.class", "problem");
