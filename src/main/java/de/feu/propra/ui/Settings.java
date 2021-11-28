@@ -2,6 +2,7 @@ package de.feu.propra.ui;
 
 import java.awt.Frame;
 import java.io.File;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -74,10 +75,18 @@ public class Settings {
   }
 
   /**
+   * If no locale setting is present, the method tries to configure the default
+   * locale, of a resource bundle for that language is available. The fallback
+   * language is en_US.
+   * 
    * @return The currently defined locale
    */
   public static Locale getLocale() {
-    var localeString = prefs.get("Language", Locale.getDefault().toLanguageTag());
+    var defaultLocale = Locale.getDefault();
+    if (!Arrays.asList(getAvailableLanguages()).contains(defaultLocale)) {
+      defaultLocale = Locale.forLanguageTag("en_US");
+    }
+    var localeString = prefs.get("Language", defaultLocale.toLanguageTag());
     return Locale.forLanguageTag(localeString);
   }
 
