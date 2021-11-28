@@ -16,7 +16,7 @@ import javax.swing.border.BevelBorder;
  *
  */
 public class StatusBar {
-  private String message = "Ready";
+  private String message = "";
   private boolean markAsModified = false;
   private JPanel panel = new JPanel();
   private JLabel textLabel = new JLabel(message, SwingConstants.LEFT);
