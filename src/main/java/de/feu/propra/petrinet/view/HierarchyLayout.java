@@ -21,7 +21,6 @@ import org.graphstream.ui.layout.Layout;
 public class HierarchyLayout extends SourceBase implements Layout {
   private Map<String, Integer> nodeLevel = new HashMap<>();
   private List<Set<String>> levelList = new ArrayList<>();
-  protected int nodeMoveCount = 0;
   private boolean needPositionUpdate = false;
   private static final int levelDistance = -30;
   private static final int nodeDistance = 50;
@@ -274,7 +273,6 @@ public class HierarchyLayout extends SourceBase implements Layout {
   public void clear() {
     nodeLevel.clear();
     levelList.clear();
-    nodeMoveCount = 0;
     needPositionUpdate = true;
   }
 
