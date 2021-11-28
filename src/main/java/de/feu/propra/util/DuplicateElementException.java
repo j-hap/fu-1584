@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.util;
+package de.feu.propra.util;
 
 /**
  * Exception to be thrown when trying to add an Element into a container that

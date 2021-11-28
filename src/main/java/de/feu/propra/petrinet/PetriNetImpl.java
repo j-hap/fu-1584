@@ -14,11 +14,11 @@ import java.util.stream.Stream;
 import de.feu.propra.petrinet.reachability.Marking;
 import de.feu.propra.petrinet.reachability.ReachabilityGraph;
 import de.feu.propra.petrinet.reachability.ReachabilityGraphImpl;
-import de.feu.propra.petrinet.util.CheckedHashMap;
-import de.feu.propra.petrinet.util.CheckedTreeMap;
-import de.feu.propra.petrinet.util.DuplicateElementException;
-import de.feu.propra.petrinet.util.SimplePnmlParser;
 import de.feu.propra.ui.Settings;
+import de.feu.propra.util.CheckedHashMap;
+import de.feu.propra.util.CheckedTreeMap;
+import de.feu.propra.util.DuplicateElementException;
+import de.feu.propra.util.SimplePnmlParser;
 
 /**
  * A concrete implementation of the {@code PetriNet} interface. It creates its

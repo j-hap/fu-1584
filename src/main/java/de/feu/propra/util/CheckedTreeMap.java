@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.util;
+package de.feu.propra.util;
 
 import java.util.TreeMap;
 

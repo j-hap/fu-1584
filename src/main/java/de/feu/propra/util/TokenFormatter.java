@@ -1,4 +1,4 @@
-package de.feu.propra.petrinet.util;
+package de.feu.propra.util;
 
 /**
  * Formatter for a {@code Place}s token count.

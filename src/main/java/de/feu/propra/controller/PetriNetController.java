@@ -28,9 +28,9 @@ import de.feu.propra.petrinet.PetriNet;
 import de.feu.propra.petrinet.PetriNode;
 import de.feu.propra.petrinet.Place;
 import de.feu.propra.petrinet.Transition;
-import de.feu.propra.petrinet.util.TokenFormatter;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.ui.ZoomController;
+import de.feu.propra.util.TokenFormatter;
 
 /**
  * Controller for Petri Net model interactions. Handles communication between a
