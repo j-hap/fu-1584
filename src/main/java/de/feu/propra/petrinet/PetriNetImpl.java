@@ -191,6 +191,7 @@ public class PetriNetImpl implements PetriNet {
     var oldMarking = getMarking();
     var t = transitions.get(id);
     if (!t.isActive()) {
+      logger.info(String.format(bundle.getString("transition_inactive_info"), id));
       return;
     }
     t.trigger();
