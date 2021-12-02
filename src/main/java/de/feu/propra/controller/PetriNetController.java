@@ -160,7 +160,10 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
       logger.warning(bundle.getString("no_places_selected"));
       return false;
     }
-    return selectedPlaces.stream().anyMatch(s -> action.apply(s));
+    // can't use anyMatch() because that short circuits on first match and
+    // does not execute subsequent calls
+    return selectedPlaces.stream().map(s -> action.apply(s))
+        .collect(Collectors.reducing(Boolean.FALSE, Boolean::logicalOr));
   }
 
   private Set<String> getIdsOfSelectedPlaces() {
