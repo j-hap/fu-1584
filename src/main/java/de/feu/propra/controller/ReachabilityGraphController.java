@@ -246,6 +246,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
    */
   @Override
   public void activeMarkingChanged(Marking newActiveMarking) {
+    deselectAllEdges();
     selectMarking(newActiveMarking.toString());
   }
 

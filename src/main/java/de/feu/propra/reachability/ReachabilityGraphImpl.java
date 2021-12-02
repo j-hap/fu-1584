@@ -79,8 +79,8 @@ public class ReachabilityGraphImpl implements ReachabilityGraph {
       listeners.forEach(l -> l.edgeAdded(edgeId, edgeLabel, oldMarking, newMarking));
       checkUnbound(newMarking);
     }
-    listeners.forEach(l -> l.edgeVisited(oldMarking, edgeId));
     listeners.forEach(l -> l.activeMarkingChanged(newMarking));
+    listeners.forEach(l -> l.edgeVisited(oldMarking, edgeId));    
   }
 
   /**
