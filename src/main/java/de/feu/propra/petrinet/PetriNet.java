@@ -89,6 +89,9 @@ public interface PetriNet {
    * the {@code Marking} are ordered alphabetically by ID of the {@code Place}s.
    * 
    * @param marking The new marking of the {@code PetriNet}.
+   * @throws IllegalArgumentException If the number of token counts in the given
+   *                                  {@code Marking} does not match the number of
+   *                                  {@code Place}s in the {@code PetriNet}.
    */
   void setMarking(Marking marking);
 

@@ -64,12 +64,12 @@ public class Marking implements Comparable<Marking> {
   }
 
   /**
-   * Implements the m &lt;-&gt; m' comparison of two {@code Marking}s. A {@code Marking}
-   * is &gt; than another if at least one token count if bigger that another and all
-   * others are equal. Does not check for equal size of the underlying token count
-   * array and might throw an IndexOutOfBoundsException when used with wrong
-   * inputs. This cannot happen when all {@code Markings} come from the same
-   * {@code PetriNet}
+   * Implements the m &lt;-&gt; m' comparison of two {@code Marking}s. A
+   * {@code Marking} is &gt; than another if at least one token count if bigger
+   * that another and all others are equal. Does not check for equal size of the
+   * underlying token count array and might throw an IndexOutOfBoundsException
+   * when used with wrong inputs. This cannot happen when all {@code Markings}
+   * come from the same {@code PetriNet}
    * 
    * @return 0 if the {@code Marking}s are equal, 1 if this {@code Marking} has at
    *         least one token count if bigger that another and all others are equal
@@ -105,5 +105,12 @@ public class Marking implements Comparable<Marking> {
    */
   public int getTokenCount(int i) {
     return nTokens.get(i);
+  }
+
+  /**
+   * @return The number of {@code Places} represented by this {@code Marking}.
+   */
+  public int size() {
+    return nTokens.size();
   }
 }

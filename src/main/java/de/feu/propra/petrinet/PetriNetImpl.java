@@ -50,6 +50,7 @@ public class PetriNetImpl implements PetriNet {
     transitions = new HashMap<>();
     arcs = new HashMap<>();
     rGraph = new ReachabilityGraphImpl(this);
+    rGraph.init();
   }
 
   /**
@@ -88,6 +89,7 @@ public class PetriNetImpl implements PetriNet {
     checkValidId(id);
     var p = new Place(id);
     places.put(id, p);
+    rGraph.init();
   }
 
   /**
@@ -171,6 +173,9 @@ public class PetriNetImpl implements PetriNet {
    */
   @Override
   public void setMarking(Marking m) {
+    if (m.size() != places.size()) {
+      throw new IllegalArgumentException();
+    }  
     if (m.equals(getMarking())) {
       return;
     }
