@@ -37,7 +37,7 @@ public class SwingTabManager implements TabManager {
   private SwingTab lastActiveTab = null;
 
   /**
-   * Constructor fot the Manager. Creates the Tab Pane and creates a default tab.
+   * Constructor for the Manager. Creates the Tab Pane and creates a default tab.
    */
   public SwingTabManager() {
     createTabPane();
@@ -78,18 +78,22 @@ public class SwingTabManager implements TabManager {
   private boolean onlyDefaulTabIsOpen() {
     return lastActiveTab != null && lastActiveTab.getName() == "" && fileToTabMap.size() == 1;
   }
-  
+
   private void addDefaultTab() {
     addTab(null);
   }
-  
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
   public SwingTab addTab(File file) {
     boolean removeDefaultTab = onlyDefaulTabIsOpen() && lastActiveTab.logIsEmpty();
     if (removeDefaultTab) {
       closeTab(fileToTabMap.get(""));
     }
     var tab = new SwingTab();
-     // uses filename as key, because the hashCode of a File includes
+    // uses filename as key, because the hashCode of a File includes
     // file modification time
     String filename = "";
     String tabName = "";
@@ -98,7 +102,7 @@ public class SwingTabManager implements TabManager {
       tabName = file.getName();
     }
     tab.setName(tabName);
-    
+
     // creates a logger for this tab
     var logHandler = new UserLogHandler(tab.getLogPane());
     logHandlers.put(tab, logHandler);
@@ -107,7 +111,7 @@ public class SwingTabManager implements TabManager {
 
     tabToFileMap.put(tab, filename);
     fileToTabMap.put(filename, tab);
-    
+
     tabContainer.add(tab);
     var iTab = tabContainer.getTabCount() - 1;
     tabContainer.setTabComponentAt(iTab, tabComponent);
@@ -115,15 +119,18 @@ public class SwingTabManager implements TabManager {
     // swing does not automatically switch to new tabs
     tabContainer.setSelectedIndex(iTab);
     lastActiveTab = tab;
-    
+
     return tab;
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public SwingTab addTab(File file, View leftView, View rightView) {
     var tab = addTab(file);
     tab.setNetView(leftView);
-    tab.setGraphView(rightView);    
+    tab.setGraphView(rightView);
     return tab;
   }
 

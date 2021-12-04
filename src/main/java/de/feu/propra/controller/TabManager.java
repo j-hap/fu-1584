@@ -17,14 +17,24 @@ import de.feu.propra.ui.SwingTab;
 public interface TabManager {
 
   /**
-   * Adds a new Tab to display the given two {@code View}s. And an assiciated log
-   * pane. If a default tab is open but does not contain any information, it is
-   * replaced by the new tab.
+   * Adds a new Tab with a log pane but without any {@code View}s. If a default
+   * tab is open but does not contain any information, it is replaced by the new
+   * tab.
+   * 
+   * @param file      The file to which the new tab is associated
+   * @return The created {@code SwingTab}
+   */
+  SwingTab addTab(File file);
+
+  /**
+   * Adds a new Tab with a log pane, which displays the two given {@code View}s.
+   * If a default tab is open but does not contain any information, it is replaced
+   * by the new tab.
    * 
    * @param file      The file to which the new tab is associated
    * @param leftView  The top left {@code View} to display.
    * @param rightView the top right {@code View} to display.
-   * @return 
+   * @return The created {@code SwingTab}
    */
   SwingTab addTab(File file, View leftView, View rightView);
 

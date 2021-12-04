@@ -24,9 +24,9 @@ import javax.swing.JLabel;
  */
 public final class HyperlinkLabel extends JLabel implements MouseListener {
   private static final long serialVersionUID = 1L;
-  private URL url = null;
   private static final Logger logger = Logger.getLogger(HyperlinkLabel.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
+  private URL url = null;
 
   private static String url2html(URL url) {
     // because of html this component unfortunately stretches to the max available

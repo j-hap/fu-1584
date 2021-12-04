@@ -2,6 +2,7 @@ package de.feu.propra.ui;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ResourceBundle;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,20 +20,21 @@ import org.graphstream.ui.view.View;
  */
 public class SwingTab extends JSplitPane {
   private static final long serialVersionUID = 1L;
-  private JSplitPane netAndGraphPane;
-  private JTextPane logPane;
   private static final JLabel netPlaceholder;
   private static final JLabel graphPlaceholder;
   private static final double defaultVerticalSplitRatio = 0.3;
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
+  private JSplitPane netAndGraphPane;
+  private JTextPane logPane;
 
   static {
     var f = new Font("SansSerif", Font.BOLD, 20);
 
-    netPlaceholder = new JLabel("Petri Net", JLabel.CENTER);
+    netPlaceholder = new JLabel(bundle.getString("Petri_net"), JLabel.CENTER);
     netPlaceholder.setFont(f);
     netPlaceholder.setForeground(Color.GRAY);
 
-    graphPlaceholder = new JLabel("Reachability Graph", JLabel.CENTER);
+    graphPlaceholder = new JLabel(bundle.getString("Reachability_graph"), JLabel.CENTER);
     graphPlaceholder.setFont(f);
     graphPlaceholder.setForeground(Color.GRAY);
   }
@@ -40,8 +42,6 @@ public class SwingTab extends JSplitPane {
   /**
    * Creates an empty SwingTab with only a log pane.
    * 
-   * @param netView   The GraphStream view to display in the top left area.
-   * @param graphView The GraphStream view to display in the top right area.
    */
   public SwingTab() {
     super(JSplitPane.VERTICAL_SPLIT);
