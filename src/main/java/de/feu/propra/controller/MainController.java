@@ -124,6 +124,9 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
   }
 
   private void loadFile(File file) {
+    // need to create the tab first, so warnings / errors can be printed
+    var tab = tabManager.addTab(file);
+
     var filename = file.getAbsolutePath();
     var net = new PetriNetImpl(file);
     var rGraph = net.getReachabilityGraph();
@@ -132,7 +135,8 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
 
     netControllers.put(filename, netController);
     graphControllers.put(filename, graphController);
-    tabManager.addTab(file, netController.getView(), graphController.getView());
+    tab.setNetView(netController.getView());
+    tab.setGraphView(graphController.getView());
     MainViewAction.enableGraphActions();
   }
 
@@ -215,7 +219,11 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
     } else {
       var filename = e.getFile().getAbsolutePath();
       var netController = netControllers.get(filename);
-      mainView.setModifiedMarker(netController.initialMarkingIsModified());
+      if (netController == null) {
+        mainView.setModifiedMarker(false);
+      } else {
+        mainView.setModifiedMarker(netController.initialMarkingIsModified());
+      }
       mainView.setStatusMessage(filename);
     }
   }

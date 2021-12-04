@@ -1,7 +1,9 @@
 package de.feu.propra.ui;
 
+import java.awt.Color;
 import java.awt.Font;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -19,6 +21,44 @@ public class SwingTab extends JSplitPane {
   private static final long serialVersionUID = 1L;
   private JSplitPane netAndGraphPane;
   private JTextPane logPane;
+  private static final JLabel netPlaceholder;
+  private static final JLabel graphPlaceholder;
+  private static final double defaultVerticalSplitRatio = 0.3;
+
+  static {
+    var f = new Font("SansSerif", Font.BOLD, 20);
+
+    netPlaceholder = new JLabel("Petri Net", JLabel.CENTER);
+    netPlaceholder.setFont(f);
+    netPlaceholder.setForeground(Color.GRAY);
+
+    graphPlaceholder = new JLabel("Reachability Graph", JLabel.CENTER);
+    graphPlaceholder.setFont(f);
+    graphPlaceholder.setForeground(Color.GRAY);
+  }
+
+  /**
+   * Creates an empty SwingTab with only a log pane.
+   * 
+   * @param netView   The GraphStream view to display in the top left area.
+   * @param graphView The GraphStream view to display in the top right area.
+   */
+  public SwingTab() {
+    super(JSplitPane.VERTICAL_SPLIT);
+    netAndGraphPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    logPane = new ClearableTextPane();
+    logPane.setFont(new Font("monospaced", Font.PLAIN, 14));
+    var scrollLogPane = new JScrollPane(logPane);
+    setTopComponent(netAndGraphPane);
+    setBottomComponent(scrollLogPane);
+    netAndGraphPane.setLeftComponent(netPlaceholder);
+    netAndGraphPane.setRightComponent(graphPlaceholder);
+    // when resizing, additional space shall be divided equally between the two top
+    // panes. the text pane shall grow less that the top pane.
+    // this also gives a nice initial distribution
+    netAndGraphPane.setResizeWeight(0.5);
+    setResizeWeight(defaultVerticalSplitRatio);
+  }
 
   /**
    * Creates a SwingTab that displays the given {@code GraphStream} {@code View}s.
@@ -27,24 +67,9 @@ public class SwingTab extends JSplitPane {
    * @param graphView The GraphStream view to display in the top right area.
    */
   public SwingTab(View netView, View graphView) {
-    super(JSplitPane.VERTICAL_SPLIT);
-    netAndGraphPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+    this();
     setNetView(netView);
     setGraphView(graphView);
-    logPane = new ClearableTextPane();
-    logPane.setFont(new Font("monospaced", Font.PLAIN, 14));
-    var scrollLogPane = new JScrollPane(logPane);
-    setTopComponent(netAndGraphPane);
-    setBottomComponent(scrollLogPane);
-    // when resizing, additional space shall be divided equally between the two top
-    // panes. the text pane shall grow less that the top pane.
-    // this also gives a nice initial distribution
-    netAndGraphPane.setResizeWeight(0.5);
-    if (netView == null && graphView == null) {
-      setResizeWeight(0.3);
-    } else {
-      setResizeWeight(0.8);
-    }
   }
 
   /**
@@ -59,6 +84,9 @@ public class SwingTab extends JSplitPane {
     } else {
       netAndGraphPane.setLeftComponent((JPanel) netView);
     }
+    if (getResizeWeight() == defaultVerticalSplitRatio) {
+      setResizeWeight(0.8);
+    }
   }
 
   /**
@@ -72,6 +100,9 @@ public class SwingTab extends JSplitPane {
       netAndGraphPane.setRightComponent(new JPanel());
     } else {
       netAndGraphPane.setRightComponent((JPanel) graphView);
+    }
+    if (getResizeWeight() == 0.0) {
+      setResizeWeight(0.3);
     }
   }
 

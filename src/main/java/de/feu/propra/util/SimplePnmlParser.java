@@ -2,6 +2,7 @@ package de.feu.propra.util;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -27,7 +28,8 @@ import propra.pnml.PNMLWopedParser;
 public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
   private List<ArcPlan> arcPlans = new ArrayList<>();
   private PetriNet net;
-  private boolean noCreate = false; // flag that determines if elements are created
+  private HashSet<String> ids = new HashSet<>(); // for checking uniqueness
+  private boolean skipElementCreation = false; // flag that determines if elements are created
   private static final Logger logger = Logger.getLogger(SimplePnmlParser.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
@@ -63,6 +65,8 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void loadFile() {
+    ids.clear();
+    arcPlans.clear();
     parse();
     addArcsToNet();
   }
@@ -72,9 +76,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void reloadFile() {
-    noCreate = true;
-    parse();
-    noCreate = false;
+    skipElementCreation = true;
+    loadFile();
+    skipElementCreation = false;
   }
 
   /**
@@ -84,7 +88,7 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newTransition(String id) {
-    if (noCreate) {
+    if (skipElementCreation || !isValidId(id)) {
       return;
     }
     try {
@@ -101,7 +105,7 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newPlace(String id) {
-    if (noCreate) {
+    if (skipElementCreation || !isValidId(id)) {
       return;
     }
     try {
@@ -122,10 +126,19 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newArc(String id, String sourceId, String targetId) {
-    if (noCreate) {
+    if (skipElementCreation || !isValidId(id)) {
       return;
     }
     arcPlans.add(new ArcPlan(id, sourceId, targetId));
+  }
+
+  private boolean isValidId(String id) {
+    if (ids.contains(id)) {
+      logger.severe(String.format(bundle.getString("id_in_use_warning"), id));      
+      return false;
+    }
+    ids.add(id);
+    return true;
   }
 
   /**

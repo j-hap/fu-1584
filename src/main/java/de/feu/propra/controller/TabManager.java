@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 
 import org.graphstream.ui.view.View;
 
+import de.feu.propra.ui.SwingTab;
+
 /**
  * Controller interface for multi-document UIs. This interface shall be
  * implemented by a controller class for a specific UI framework.
@@ -22,8 +24,9 @@ public interface TabManager {
    * @param file      The file to which the new tab is associated
    * @param leftView  The top left {@code View} to display.
    * @param rightView the top right {@code View} to display.
+   * @return 
    */
-  void addTab(File file, View leftView, View rightView);
+  SwingTab addTab(File file, View leftView, View rightView);
 
   /**
    * Deletes the current Tab and the associated objects. If the last tab is
