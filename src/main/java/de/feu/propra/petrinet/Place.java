@@ -24,14 +24,14 @@ public class Place extends SimplePetriNode {
 
   /**
    * Removes a token. Throws an exeption instead, if the token count would become
-   * negative. Any listener if notified of this change.
+   * negative. Any listener is notified of this change.
    * 
    * @throws IllegalStateException If the number of tokens would become negative
    *                               if another token was removed.
    */
-  void removeToken() throws IllegalStateException {
+  void removeToken() {
     if (nTokens == 0) {
-      throw new IllegalStateException("Token count must not be negative!");
+      throw new IllegalStateException();
     }
     tokensChanged(nTokens, --nTokens);
   }
@@ -90,8 +90,12 @@ public class Place extends SimplePetriNode {
    * count to the new initial token count.
    * 
    * @param tokenCount The new token count.
+   * @throws IllegalStateException when given token count is negative.
    */
   void setInitialTokenCount(int tokenCount) {
+    if (tokenCount < 0) {
+      throw new IllegalStateException();
+    }
     var old = nInitialTokens;
     nTokens = tokenCount;
     nInitialTokens = tokenCount;

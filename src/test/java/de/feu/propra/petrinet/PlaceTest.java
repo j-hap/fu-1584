@@ -58,10 +58,16 @@ class PlaceTest {
 
   @Test
   void doesNotAllowNegativeTokenCount() {
-    Exception exception = assertThrows(IllegalStateException.class, () -> {
+    assertThrows(IllegalStateException.class, () -> {
       place.removeToken();
     });
-    assertEquals(exception.getMessage(), "Token count must not be negative!");
+  }
+  
+  @Test
+  void doesNotAllowInitialNegativeTokenCount() {
+    assertThrows(IllegalStateException.class, () -> {
+      place.setInitialTokenCount(-1);
+    });
   }
 
   @Test
