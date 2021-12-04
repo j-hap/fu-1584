@@ -6,7 +6,7 @@ package de.feu.propra.petrinet;
  * @author j-hap 
  *
  */
-public class IllegalConnectionException extends Exception {
+public class IllegalConnectionException extends IllegalArgumentException {
   private static final long serialVersionUID = 1L;
 
   /**

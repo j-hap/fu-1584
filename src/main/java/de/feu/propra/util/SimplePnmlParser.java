@@ -2,7 +2,6 @@ package de.feu.propra.util;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -28,8 +27,8 @@ import propra.pnml.PNMLWopedParser;
 public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
   private List<ArcPlan> arcPlans = new ArrayList<>();
   private PetriNet net;
-  private HashSet<String> ids = new HashSet<>(); // for checking uniqueness
   private boolean skipElementCreation = false; // flag that determines if elements are created
+  private boolean skipProperties = false; // flag to skip properties if there is an error during element creation
   private static final Logger logger = Logger.getLogger(SimplePnmlParser.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
@@ -52,10 +51,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
     for (var s : arcPlans) {
       try {
         net.addArc(s.id, s.sourceId, s.targetId);
-      } catch (IllegalConnectionException e) {
-        logger.warning(String.format(bundle.getString("illegal_connection"), s.sourceId, s.targetId));
-      } catch (DuplicateElementException e) {
-        logger.warning(String.format(bundle.getString("arc_exists_warning"), s.sourceId, s.targetId));
+      } catch (IllegalConnectionException | DuplicateElementException | ElementNotFoundException e) {
+        var msg = bundle.getString("arc_error_prefix") + " " + e.getMessage();
+        logger.severe(msg);
       }
     }
   }
@@ -65,7 +63,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void loadFile() {
-    ids.clear();
+    // in case the last element previously created triggered to skip properties of
+    // nodes AND the parser is reused
+    skipProperties = false;
     arcPlans.clear();
     parse();
     addArcsToNet();
@@ -88,13 +88,16 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newTransition(String id) {
-    if (skipElementCreation || !isValidId(id)) {
+    skipProperties = false;
+    if (skipElementCreation) {
       return;
     }
     try {
       net.addTransition(id);
     } catch (DuplicateElementException e) {
-      logger.warning(String.format(bundle.getString("transition_id_exists_warning"), id));
+      var msg = bundle.getString("transition_error_prefix") + " " + e.getMessage();
+      logger.severe(msg);
+      skipProperties = true;
     }
   }
 
@@ -105,13 +108,16 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newPlace(String id) {
-    if (skipElementCreation || !isValidId(id)) {
+    skipProperties = false;
+    if (skipElementCreation) {
       return;
     }
     try {
       net.addPlace(id);
     } catch (DuplicateElementException e) {
-      logger.warning(String.format(bundle.getString("place_id_exists_warning"), id));
+      var msg = bundle.getString("place_error_prefix") + " " + e.getMessage();
+      logger.severe(msg);
+      skipProperties = true;
     }
   }
 
@@ -126,19 +132,10 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void newArc(String id, String sourceId, String targetId) {
-    if (skipElementCreation || !isValidId(id)) {
+    if (skipElementCreation) {
       return;
     }
     arcPlans.add(new ArcPlan(id, sourceId, targetId));
-  }
-
-  private boolean isValidId(String id) {
-    if (ids.contains(id)) {
-      logger.severe(String.format(bundle.getString("id_in_use_warning"), id));      
-      return false;
-    }
-    ids.add(id);
-    return true;
   }
 
   /**
@@ -150,6 +147,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void setPosition(String id, String x, String y) {
+    if (skipProperties) {
+      return;
+    }
     int xPos = Integer.valueOf(x);
     int yPos = Integer.valueOf(y);
     try {
@@ -167,6 +167,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void setName(String id, String name) {
+    if (skipProperties) {
+      return;
+    }
     try {
       net.setNodeName(id, name);
     } catch (ElementNotFoundException e) {
@@ -183,6 +186,9 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
    */
   @Override
   public void setTokens(String id, String tokens) {
+    if (skipProperties) {
+      return;
+    }
     try {
       net.setInitialTokens(id, Integer.valueOf(tokens));
     } catch (ElementNotFoundException e) {

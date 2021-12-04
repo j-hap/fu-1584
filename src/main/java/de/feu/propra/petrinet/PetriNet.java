@@ -34,12 +34,12 @@ public interface PetriNet {
    * @param id     Unique ID of the {@code Arc} to be added.
    * @param source Unique ID of the source {@code PetriNode}.
    * @param target Unique ID of the target {@code PetriNode}.
-   * @throws IllegalConnectionException When either source or target
-   *                                    {@code PetriNode} does not exist or the
-   *                                    types of the {@code PetriNode}s to be
-   *                                    connected are equal.
+   * @throws IllegalConnectionException When the types of the {@code PetriNode}s
+   *                                    to be connected are equal.
+   * @throws ElementNotFoundException   When either source or target
+   *                                    {@code PetriNode} does not exist.
    */
-  void addArc(String id, String source, String target) throws IllegalConnectionException;
+  void addArc(String id, String source, String target);
 
   /**
    * Renames a {@code PetriNode}.
@@ -49,7 +49,7 @@ public interface PetriNet {
    * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
    *                                  not found.
    */
-  void setNodeName(String id, String name) throws ElementNotFoundException;
+  void setNodeName(String id, String name);
 
   /**
    * Sets position of a {@code PetriNode} to be used in a {@code View} of the
@@ -61,7 +61,7 @@ public interface PetriNet {
    * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
    *                                  not found.
    */
-  void setNodePosition(String id, int x, int y) throws ElementNotFoundException;
+  void setNodePosition(String id, int x, int y);
 
   /**
    * Sets the number of initial tokens an a {@code PetriNode}.
@@ -72,7 +72,7 @@ public interface PetriNet {
    * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
    *                                  not found.
    */
-  void setInitialTokens(String id, int nTokens) throws ElementNotFoundException;
+  void setInitialTokens(String id, int nTokens);
 
   /**
    * Collects the current token count of all places and returns it as a
@@ -97,6 +97,8 @@ public interface PetriNet {
    * a {@code Transition}, the method does nothing.
    * 
    * @param id Unique ID of the {@code Transition} to be triggered.
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
   void triggerTransition(String id);
 
@@ -173,6 +175,7 @@ public interface PetriNet {
    * @param id Unique ID of the {@code PetriNode} to be checked.
    * @return True if the given ID belongs to a {@code Transition}, false
    *         otherwise.
+   * @throws ElementNotFoundException If there is no Element with the given ID.
    */
   boolean isTransition(String id);
 

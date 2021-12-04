@@ -4,9 +4,12 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -15,8 +18,6 @@ import de.feu.propra.reachability.Marking;
 import de.feu.propra.reachability.ReachabilityGraph;
 import de.feu.propra.reachability.ReachabilityGraphImpl;
 import de.feu.propra.ui.Settings;
-import de.feu.propra.util.CheckedHashMap;
-import de.feu.propra.util.CheckedTreeMap;
 import de.feu.propra.util.DuplicateElementException;
 import de.feu.propra.util.SimplePnmlParser;
 
@@ -33,6 +34,7 @@ public class PetriNetImpl implements PetriNet {
   private SortedMap<String, Place> places;
   private Map<String, Transition> transitions;
   private Map<String, Arc> arcs;
+  private HashSet<String> ids = new HashSet<>(); // for checking uniqueness
   private ReachabilityGraph rGraph;
   private boolean isInInitialState = true;
   private File file;
@@ -44,9 +46,9 @@ public class PetriNetImpl implements PetriNet {
    * Constructor to start a new {@code PetriNetImpl} from scratch.
    */
   public PetriNetImpl() {
-    places = new CheckedTreeMap<>();
-    transitions = new CheckedHashMap<>();
-    arcs = new CheckedHashMap<>();
+    places = new TreeMap<>();
+    transitions = new HashMap<>();
+    arcs = new HashMap<>();
     rGraph = new ReachabilityGraphImpl(this);
   }
 
@@ -82,7 +84,8 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void addPlace(String id) throws DuplicateElementException {
+  public void addPlace(String id) {
+    checkValidId(id);
     var p = new Place(id);
     places.put(id, p);
   }
@@ -91,7 +94,8 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void addTransition(String id) throws DuplicateElementException {
+  public void addTransition(String id) {
+    checkValidId(id);
     var t = new Transition(id);
     transitions.put(id, t);
   }
@@ -100,18 +104,16 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void addArc(String id, String source, String target)
-      throws IllegalConnectionException, DuplicateElementException {
+  public void addArc(String id, String source, String target) {
+    checkValidId(id);
     SimplePetriNode sourceNode;
     SimplePetriNode targetNode;
-    try {
-      sourceNode = getNode(source);
-      targetNode = getNode(target);
-    } catch (ElementNotFoundException e) {
-      throw new IllegalConnectionException("Cannot create Arc, source or target does not exist.");
-    }
+    sourceNode = getNode(source);
+    targetNode = getNode(target);
+
     if (sourceNode.getType() == targetNode.getType()) {
-      throw new IllegalConnectionException("Cannot create Arc, source and target must be different node types.");
+      var msg = String.format(bundle.getString("illegal_connection"), source, target);
+      throw new IllegalConnectionException(msg);
     }
 
     if (sourceNode.isTransition()) {
@@ -131,7 +133,7 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void setNodeName(String id, String name) throws ElementNotFoundException {
+  public void setNodeName(String id, String name) {
     getNode(id).setName(name);
   }
 
@@ -139,7 +141,7 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void setNodePosition(String id, int x, int y) throws ElementNotFoundException {
+  public void setNodePosition(String id, int x, int y) {
     getNode(id).setPosition(x, y);
   }
 
@@ -147,12 +149,12 @@ public class PetriNetImpl implements PetriNet {
    * {@inheritDoc}
    */
   @Override
-  public void setInitialTokens(String id, int nTokens) throws ElementNotFoundException {
-    if (places.containsKey(id)) {
-      places.get(id).setInitialTokenCount(nTokens);
-    } else {
-      throw new ElementNotFoundException();
+  public void setInitialTokens(String id, int nTokens) {
+    var p = getNode(id);
+    if (!p.isPlace()) {
+      return;
     }
+    places.get(id).setInitialTokenCount(nTokens);
   }
 
   /**
@@ -329,16 +331,17 @@ public class PetriNetImpl implements PetriNet {
    */
   @Override
   public boolean isTransition(String id) {
-    return transitions.containsKey(id);
+    return getNode(id).isTransition();
   }
 
-  private SimplePetriNode getNode(String id) throws ElementNotFoundException {
+  private SimplePetriNode getNode(String id) {
     if (places.containsKey(id)) {
       return places.get(id);
     } else if (transitions.containsKey(id)) {
       return transitions.get(id);
     } else {
-      throw new ElementNotFoundException();
+      var msg = String.format(bundle.getString("id_does_not_exist_warning"), id);
+      throw new ElementNotFoundException(msg);
     }
   }
 
@@ -348,5 +351,12 @@ public class PetriNetImpl implements PetriNet {
   @Override
   public ReachabilityGraph getReachabilityGraph() {
     return rGraph;
+  }
+
+  private void checkValidId(String id) {
+    if (ids.contains(id)) {
+      throw new DuplicateElementException(String.format(bundle.getString("id_in_use_warning"), id));
+    }
+    ids.add(id);
   }
 }
