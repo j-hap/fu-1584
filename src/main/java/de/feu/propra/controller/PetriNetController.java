@@ -196,6 +196,12 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
     case "Label":
       spriteManager.getSprite(node.getId()).setAttribute("label", (String) evt.getNewValue());
       break;
+    case "XPos":
+      graph.getNode(node.getId()).setAttribute("x", (Integer) evt.getNewValue());
+      break;
+    case "YPos":
+      graph.getNode(node.getId()).setAttribute("y", -(Integer) evt.getNewValue());
+      break;
     }
   }
 
