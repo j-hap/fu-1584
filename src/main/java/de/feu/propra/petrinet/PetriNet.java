@@ -204,19 +204,19 @@ public class PetriNet {
    *                                  {@code Marking} does not match the number of
    *                                  {@code Place}s in the {@code PetriNet}.
    */
-  public void setMarking(Marking m) {
-    if (m.size() != places.size()) {
+  public void setMarking(Marking marking) {
+    if (marking.size() != places.size()) {
       throw new IllegalArgumentException();
     }
-    if (m.equals(getMarking())) {
+    if (marking.equals(getMarking())) {
       return;
     }
     int iPlace = 0;
     for (var p : places.values()) {
-      p.setTokenCount(m.getTokenCount(iPlace));
+      p.setTokenCount(marking.getTokenCount(iPlace));
       ++iPlace;
     }
-    rGraph.markingChanged(m);
+    rGraph.markingChanged(marking);
   }
 
   /**

@@ -145,8 +145,8 @@ public class ReachabilityGraph {
    * 
    * @param listener The {@code ReachabilityGraphChangeListener} to be added.
    */
-  public void addChangeListener(ReachabilityGraphChangeListener l) {
-    listeners.add(l);
+  public void addChangeListener(ReachabilityGraphChangeListener listener) {
+    listeners.add(listener);
   }
 
   /**
@@ -155,8 +155,8 @@ public class ReachabilityGraph {
    * 
    * @param listener The {@code ReachabilityGraphChangeListener} to be removed.
    */
-  public void removeChangeListener(ReachabilityGraphChangeListener l) {
-    listeners.remove(l);
+  public void removeChangeListener(ReachabilityGraphChangeListener listener) {
+    listeners.remove(listener);
   }
 
   /**
