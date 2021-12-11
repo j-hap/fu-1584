@@ -22,7 +22,7 @@ class MarkingTest {
   }
 
   @BeforeEach
-  void setUp() throws Exception {    
+  void setUp() throws Exception {
   }
 
   @AfterEach
@@ -33,28 +33,28 @@ class MarkingTest {
   void testToStringEmptyMarking() {
     assertEquals("()", new Marking().toString());
   }
-  
+
   @Test
   void testToStringSingleEntry() {
     assertEquals("(1)", new Marking(1).toString());
   }
-  
+
   @Test
   void testToStringTwoEntries() {
-    assertEquals("(1|2)", new Marking(1,2).toString());
+    assertEquals("(1|2)", new Marking(1, 2).toString());
   }
-  
+
   @Test
   void testToStringNegativeEntries() {
-    assertEquals("(-1|-2)", new Marking(-1,-2).toString());
+    assertEquals("(-1|-2)", new Marking(-1, -2).toString());
   }
-  
+
   @Test
   void sameTokenCountMeansEqual() {
     assertTrue(new Marking().equals(new Marking()));
     assertTrue(new Marking(1).equals(new Marking(1)));
   }
-  
+
   @Test
   void sameTokenCountYieldsSameHash() {
     assertTrue(new Marking().hashCode() == new Marking().hashCode());
