@@ -16,7 +16,6 @@ import java.util.stream.Stream;
 
 import de.feu.propra.reachability.Marking;
 import de.feu.propra.reachability.ReachabilityGraph;
-import de.feu.propra.reachability.ReachabilityGraphImpl;
 import de.feu.propra.ui.Settings;
 import de.feu.propra.util.DuplicateElementException;
 import de.feu.propra.util.SimplePnmlParser;
@@ -49,7 +48,7 @@ public class PetriNet {
     places = new TreeMap<>();
     transitions = new HashMap<>();
     arcs = new HashMap<>();
-    rGraph = new ReachabilityGraphImpl(this);
+    rGraph = new ReachabilityGraph(this);
     rGraph.init();
   }
 

@@ -14,17 +14,18 @@ import de.feu.propra.controller.ReachabilityGraphChangeListener;
 import de.feu.propra.petrinet.PetriNet;
 
 /**
- * An implementation of the {@link ReachabilityGraph} interface. The
- * {@code ReachabilityGraphImpl} tracks the history of a {@code PetriNet} by
- * storing all visited {@code Marking}s in a graph. It allows manipulating the
- * current marking of a {@code PetriNet} by switching to an already visited
- * marking. Through tracking the visited marking, it is able to determine if the
- * observed {@code PetriNet} is unbounded.
+ * A Reachability Graph representation that allows iterative construction as
+ * well as listening to changes. The {@code ReachabilityGraph} tracks the
+ * history of a {@code PetriNet} by storing all visited {@code Marking}s in a
+ * graph. It allows manipulating the current marking of a {@code PetriNet} by
+ * switching to an already visited marking. Through tracking the visited
+ * marking, it is able to determine if the observed {@code PetriNet} is
+ * unbounded.
  * 
  * @author j-hap 
  *
  */
-public class ReachabilityGraphImpl implements ReachabilityGraph {
+public class ReachabilityGraph {
   private PetriNet net;
   private Map<Marking, LinkedMarking> nodes;
   private List<Marking> unboundedMarkings;
@@ -39,14 +40,15 @@ public class ReachabilityGraphImpl implements ReachabilityGraph {
    * @param net The {@code PetriNet} to which changes in the active Marking are
    *            propagated.
    */
-  public ReachabilityGraphImpl(PetriNet net) {
+  public ReachabilityGraph(PetriNet net) {
     this.net = net;
   }
 
   /**
-   * {@inheritDoc}
+   * Initializes the {@code ReachabilityGraph} to start a new iterative
+   * construction. It notifies listeners about the initialization, in case a
+   * visualization has to be updated.
    */
-  @Override
   public void init() {
     net.resetPlaces();
     nodes = new HashMap<>();
@@ -58,11 +60,13 @@ public class ReachabilityGraphImpl implements ReachabilityGraph {
   }
 
   /**
-   * {@inheritDoc} When a new edge is added, is also checks the boundedness of the
-   * parent {@code PetriNet} by looking at all predecessor {@code Marking}s of the
-   * active one and checking the m &lt;-&gt; m' relation.
+   * Adds a marking to the graph and creates the necessary connections.
+   * 
+   * @param edgeId     ID of the edge that lead to the new {@code Marking}.
+   * @param edgeLabel  Label of the edge that lead to the new {@code Marking}.
+   * @param oldMarking Marking that was active before the newly added one.
+   * @param newMarking Marking to be added to the graph.
    */
-  @Override
   public void addMarking(String edgeId, String edgeLabel, Marking oldMarking, Marking newMarking) {
     LinkedMarking target;
     if (nodes.containsKey(newMarking)) {
@@ -80,79 +84,93 @@ public class ReachabilityGraphImpl implements ReachabilityGraph {
       checkUnbound(newMarking);
     }
     listeners.forEach(l -> l.activeMarkingChanged(newMarking));
-    listeners.forEach(l -> l.edgeVisited(oldMarking, edgeId));    
+    listeners.forEach(l -> l.edgeVisited(oldMarking, edgeId));
   }
 
   /**
-   * {@inheritDoc}
+   * @return The currently active {@code Marking}.
    */
-  @Override
   public Marking getActiveMarking() {
     return net.getMarking();
   }
 
   /**
-   * {@inheritDoc}
+   * Sets an already existing {@code Marking} as active. Throws
+   * IllegalStateException when the given {@code Marking} is not present in the
+   * {@code ReachabilityGraph}.
+   * 
+   * @param newMarking The {@code Marking} to set active.
+   * @throws IllegalStateException If the Marking is not present in the
+   *                               {@code ReachabilityGraph}.
    */
-  @Override
   public void setActiveMarking(Marking newMarking) {
     checkValid(newMarking);
     net.setMarking(newMarking);
   }
 
   /**
-   * {@inheritDoc}
+   * Method to be called when the parent {@code PetriNet} was set to another
+   * marking by any other way than triggering a transition.
+   * 
+   * @param newMarking The {@code Marking} to set active.
    */
-  @Override
   public void markingChanged(Marking newMarking) {
     checkValid(newMarking);
     listeners.forEach(l -> l.activeMarkingChanged(newMarking));
   }
 
   /**
-   * {@inheritDoc}
+   * Counts the number of nodes.
+   * 
+   * @return The number of {@code Marking}s currently present in the
+   *         {@code ReachabilityGraph}.
    */
-  @Override
   public int getNodeCount() {
     return nodes.size();
   }
 
   /**
-   * {@inheritDoc}
+   * Counts the number of edges.
+   * 
+   * @return The number of {@code Edge}s currently present in the
+   *         {@code ReachabilityGraph}.
    */
-  @Override
   public int getEdgeCount() {
     return nodes.values().stream().mapToInt(n -> n.getSuccessorCount()).sum();
   }
 
   /**
-   * {@inheritDoc}
+   * Adds a {@code ReachabilityGraphChangeListener} to the
+   * {@code ReachabilityGraph}.
+   * 
+   * @param listener The {@code ReachabilityGraphChangeListener} to be added.
    */
-  @Override
   public void addChangeListener(ReachabilityGraphChangeListener l) {
     listeners.add(l);
   }
 
   /**
-   * {@inheritDoc}
+   * Removes a {@code ReachabilityGraphChangeListener} from the
+   * {@code ReachabilityGraph}.
+   * 
+   * @param listener The {@code ReachabilityGraphChangeListener} to be removed.
    */
-  @Override
   public void removeChangeListener(ReachabilityGraphChangeListener l) {
     listeners.remove(l);
   }
 
   /**
-   * {@inheritDoc}
+   * @return True if the currently present {@code Marking}s do not indicate
+   *         unboundedness. False otherwise.
    */
-  @Override
   public boolean isBounded() {
     return isBounded;
   }
 
   /**
-   * {@inheritDoc}
+   * @return A List of Markings that match the m &lt;-&gt; m' relation.
+   * @see Marking#compareTo(Marking)
    */
-  @Override
   public List<Marking> getUnboundedMarkings() {
     return Collections.unmodifiableList(unboundedMarkings);
   }
