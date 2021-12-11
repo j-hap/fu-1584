@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.feu.propra.petrinet.PetriNetImpl;
+import de.feu.propra.petrinet.PetriNet;
 import de.feu.propra.ui.Settings;
 
 /**
@@ -49,7 +49,7 @@ public class BatchSolver {
 
   private void checkSingleFile(File f) {
     logger.info(bundle.getString("Checking") + " " + f.getName());
-    var net = new PetriNetImpl(f);
+    var net = new PetriNet(f);
     var solver = new BoundednessSolver(net);
     var res = solver.solve();
     res.file = f;
