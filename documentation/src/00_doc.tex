@@ -1,0 +1,50 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage{lmodern} % latin modern font family
+\usepackage[ngerman]{babel}
+\usepackage{biblatex}
+\bibliography{sources.bib}
+% \usepackage{babelbib} % for german bibliography style babplain-fl
+\usepackage{csquotes} % language specific quotes
+\setlength{\parindent}{0pt} % no indentation new paragraph
+
+\usepackage{amsmath} % math-stuff
+\usepackage{amssymb} % math-symbols
+\usepackage{amsthm} % qed symbol
+
+% \usepackage{mathtools} % better alignment in matrix with optional args
+\usepackage{enumitem} % a,b,c enumerate
+% \usepackage{nicefrac} % inline fractions
+\usepackage{url} % nice urls
+\usepackage{hyperref} % clickable urls
+
+\usepackage{listings} % source code
+\usepackage{fontspec} % for custom font selection
+\newfontfamily\lstfamily{DejaVuSansMono} % defines a new font family used in listings
+
+\usepackage{xcolor} % for custom colors
+\definecolor{darkgreen}{rgb}{0, 0.65, 0}
+\definecolor{codepurple}{rgb}{0.58, 0, 0.82}
+\definecolor{codebackground}{rgb}{0.98, 0.98, 0.98}
+\lstdefinestyle{mystyle}{
+    backgroundcolor = \color{codebackground},
+    commentstyle = \color{darkgreen},
+    keywordstyle = \color{blue},
+    stringstyle = \color{orange},
+    basicstyle = \scriptsize\lstfamily,
+    showstringspaces = false
+}
+\lstset{style = mystyle}
+
+\usepackage{graphicx} % inclusion of external graphics with \includegraphics
+
+\usepackage[ngerman, noabbrev]{cleveref} % referenced type name included in ref
+
+\begin{document}
+\input{01_intro}
+\input{02_manual}
+\input{03_structure}
+\input{04_algo}
+\printbibliography
+% \bibliographystyle{babplain-fl}
+% \bibliography{sources}
+\end{document}

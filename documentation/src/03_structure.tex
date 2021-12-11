@@ -1,0 +1,108 @@
+\section{Programmstruktur}
+\label{sec:struct}
+
+In diesem Abschnitt wird auf die Implementierung der Modell-Klassen und die
+darin verwendeten Datenstrukturen eingegangen.
+
+\subsection{PetriNet}
+
+Die Klasse \texttt{PetriNet} bildet die Modell-Repräsentation eines Petri-Netzes
+in PetriCheck dar. Wegen der Einzigartigkeit der Element-IDs werden die Stellen,
+Transitionen und Kanten als eigene Objekte jeweils in Java \texttt{Map}s
+organisiert. Dies ermöglicht schnellen und komfortablen Zugriff auf die Elemente
+des Netzes mittels ihrer ID.
+
+Um sicherzustellen, dass jede ID einzigartig ist ist, wird bei jedem Hinzufügen
+eines neuen Elementes geprüft, ob die ID des zu erzeugenden Elementes
+einzigartig ist. Hierfür wird ein \texttt{Set} von IDs befüllt und vor jedem
+Einfügen geprüft, ob die neue Element-ID in diesem Netz schon in Verwendung ist.
+
+Wird die Einzigartigkeitsbedingung verletzt, so informiert das PetriNet die
+aufrufende Methode mittels Exception darüber. In PetriCheck erfolgt der Aufbau
+des Petri-Netzes ausschließlich auf Dateibasis. Der dafür verwendete
+\texttt{SimplePnmlParser} kann durch Abfangen dieser Exceptions den Anwender
+über Fehldefinitionen innerhalb der PNML-Datei über Logger-Ausgaben informieren.
+
+Die Kanten werden zwar auch innerhalb des \texttt{PetriNet} Objektes gehalten,
+allerdings dienen diese nur dazu eine grafische Repräsentation der Kanten zu
+erstellen. Die eigentliche Schaltlogik ist auf Elementebene implementiert.
+Stellen und Transitionen sind als eigene Klassen implementiert. Jeder Transition
+werden beim Hinzufügen der Kanten zum Petri-Netz ihre Vorgänger- und
+Nachfolger-Stellen bekannt gemacht. Das Petri-Netz selbst gibt zum Schalten
+einer Transition nur der zu schaltenen Transition Bescheid. Die Umverteilung von
+Tokens geschieht dann auf Element-Ebene.
+
+\subsection{ReachabilityGraph}
+
+Die Klasse \texttt{ReachabilityGraph} bildet die Modell-Repräsentation eines
+Erreichbarkeitsgraphen in PetriCheck dar.
+
+Wegen der einfacheren Synchronisation erstellt jedes \texttt{PetriNet} Objekt
+bei seiner Erstellung direkt ein \texttt{ReachabilityGraph}-Objekt. So kann
+sichergestellt werden, dass jedes Petri-Netz stets einen eigenen
+Erreichbarkeitsgraphen pflegt und die Schalthistorie verfolgt wird.
+
+Die Knoten des Erreichbarkeitsgraphen werden durch
+\texttt{LinkedMarking}-Objekte gebildet. Dies ist eine Subklasse der
+\texttt{Marking}-Klasse. Ein \texttt{Marking}-Objekt stellt eine Markierung
+eines Petri-Netzes dar. Hierbei wird die Anzahl der Tokens einer jeden Stelle
+durch eine einfache Ganzzahl in einem Array repräsentiert. Die Ordnung in diesem
+Array entspricht der alphabetischen Ordnung der IDs der Stellen. Zwei
+\texttt{Marking}s mit derselben Markierung gibt den gleichen Hash-Wert aus.
+Ebenso bezieht sich der Vergleich mit der \texttt{equals}-Methode ausschließlich
+auf die repräsentierte Markierung. Dies vereinfacht die Handhabung von zwei
+unterschiedlichen \texttt{Marking}s, die aber die selbe Markierung des
+Petri-Netzes repräsentieren.
+
+Ein \texttt{LinkedMarking} enthält neben den geerbten Attributen des
+\texttt{Marking}s die Verbindungen zu anderen \texttt{LinkedMarking}s, sowohl
+Vorgänger als auch Nachfolger. Da die Kanten in einem Erreichbarkeitsgraphen
+gelabelt sind, dient die generische Klasse \texttt{Edge} als Repräsentation
+einer gelabelten Kante. Jedes \texttt{Edge}-Objekt enthält den Namen der Kante
+sowie den Ursprungs-/Zielknoten der Kante, je nachdem wie sie verwendet wird.
+Die Nachbarn eines \texttt{LinkedMarking}s werden also zwei \texttt{Set}s von
+\texttt{Edge}-Objekten gehalten. Dies ermöglicht die Identifikation von
+Vorgänger- und Nachfolgermarkierungen, was beim Aufbau des
+Erreichbarkeitsgraphen als auch bei der Beschränktheitsanalyse dienlich ist
+(siehe \cref{sec:algo}).
+
+Wie bei den \texttt{Marking}-Objekten gelten zwei Edges als gleich, wenn sie das
+gleiche Label und den gleichen Endknoten haben. Zwei Edge-Objekte liefern dann
+also auch den gleichen Hash-Wert, der zur Indentifikation in \texttt{HashSet}s
+genutzt wird. Dies ermöglicht die einfache Kontrolle, ob im Petri-Netz
+geschaltete Trasitionen schon im Netz vorhanden sind, auch wenn diese Kante
+durch ein separates Objekt repräsentiert wird.
+
+\subsubsection{UI-Actions}
+Die Implementierung der dem Anwender angebotenen Aktionen in der grafischen
+Bedienoberfläche (GUI) ist mit möglichst geringer Code-Duplikation umgesetzt. Es
+können einige Aktionen in der Oberfläche an mehreren Stellen ausgelöst werden,
+zum Beispiel im Menüband als auch in der Toolbar. Es soll aber nur eine
+Repräsentation dieser Aktion existieren. Hierfür werden die \texttt{Action}s als
+Eigenschaften von \texttt{Enum}-Objekten in der \texttt{MainViewAction}
+Enumeration gehalten. Jedes Objekt dieser Aufzählung wird bei der Erstellung mit
+einem anzuzeigenden Befehlstext, einem Hinweistext (Tooltip) und einem Element
+der \texttt{UiIcon}-Enumeration versehen. Innerhalb eines
+\texttt{UiIcon}-Objekts sind Icons in zwei Größen eingebettet, ein Icon für die
+Darstellung eines Toolbar-Buttons und ein Icon für die Visualisierung innerhalb
+des Anwendungsmenüs. Diese Icons werden an die entsprechenden Stellen in der
+Action gesetzt, sodass das Swing Framework das jeweils geeignete Icon in der
+Oberfläche darstellt.
+
+Die unterhalb der einzelnen \texttt{MainViewAction}-Einträgen liegenden
+\texttt{Action}s werden beim Aufbau der Bedienoberfläche an den jeweilgen
+Stellen eingesetzt. Wird nun eine dieser Action aus dem GUI heraus getriggert,
+so erfolgt eine Weiterleitung der Aktion an ein zentrales Mediator-Objekt, das
+im Vorfeld der \texttt{MainViewAction}-Aufzählung mitgeteilt wurde.
+
+Bei der Weiterleitung wird allerdings der ursprüngliche Auslöser der Aktion, die
+\texttt{Action} eines \texttt{MainViewAction}-Objekts, durch das
+\texttt{MainViewAction}-Objekt selbst ersetzt. Dies ermöglicht eine komfortable
+Entscheidung mittels \texttt{switch}-Statements darüber, welche Aktion im
+Mediator-Objekt ausgelöst werden soll.
+
+Die Umsetztung sowohl der \texttt{MainViewAction}- als auch der
+\texttt{UiIcon}-Objekte in Aufzählungen erlaubt die einfache Verwaltung aller
+verfügbaren Aktionen an zentraler Stelle bei geringem Code-Umfang.
+
+Die Rolle des Mediator-Objekts nimmt die \texttt{MainController}-Klasse ein.
