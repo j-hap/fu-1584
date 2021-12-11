@@ -22,14 +22,14 @@ import de.feu.propra.util.DuplicateElementException;
 import de.feu.propra.util.SimplePnmlParser;
 
 /**
- * A concrete implementation of the {@code PetriNet} interface. It creates its
- * own {@code ReachabilityGraph} to track the visited markings. A
- * {@code PetriNetImpl} may be constructed from a PNML file.
+ * A Petri Net representation that allows creation and interaction as well as
+ * listening to changes. It creates its own {@code ReachabilityGraph} to track
+ * the visited markings. A {@code PetriNet} may be constructed from a PNML file.
  * 
  * @author j-hap 
  *
  */
-public class PetriNetImpl implements PetriNet {
+public class PetriNet {
   // sorted map, because a marking contains tokens in order of place id
   private SortedMap<String, Place> places;
   private Map<String, Transition> transitions;
@@ -38,14 +38,14 @@ public class PetriNetImpl implements PetriNet {
   private ReachabilityGraph rGraph;
   private boolean isInInitialState = true;
   private File file;
-  private static final Logger logger = Logger.getLogger((PetriNetImpl.class.getName()));
+  private static final Logger logger = Logger.getLogger((PetriNet.class.getName()));
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
   private boolean unboundedWarningWasShown = false;
 
   /**
    * Constructor to start a new {@code PetriNetImpl} from scratch.
    */
-  public PetriNetImpl() {
+  public PetriNet() {
     places = new TreeMap<>();
     transitions = new HashMap<>();
     arcs = new HashMap<>();
@@ -58,7 +58,7 @@ public class PetriNetImpl implements PetriNet {
    * 
    * @param file A PNML file from which the {@code PetriNetImpl} shall be loaded.
    */
-  public PetriNetImpl(File file) {
+  public PetriNet(File file) {
     this();
     // parser swallows file not found exception, so we test for it here
     // to give better feedback
@@ -82,9 +82,10 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Adds a {@code Place} to the net.
+   * 
+   * @param id Unique ID of the {@code Place} to be added.
    */
-  @Override
   public void addPlace(String id) {
     checkValidId(id);
     var p = new Place(id);
@@ -93,9 +94,10 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Adds a {@code Transition} to the net.
+   * 
+   * @param id Unique ID of the {@code Transition} to be added.
    */
-  @Override
   public void addTransition(String id) {
     checkValidId(id);
     var t = new Transition(id);
@@ -103,9 +105,16 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Tries to add an {@code Arc} to the net.
+   * 
+   * @param id     Unique ID of the {@code Arc} to be added.
+   * @param source Unique ID of the source {@code PetriNode}.
+   * @param target Unique ID of the target {@code PetriNode}.
+   * @throws IllegalConnectionException When the types of the {@code PetriNode}s
+   *                                    to be connected are equal.
+   * @throws ElementNotFoundException   When either source or target
+   *                                    {@code PetriNode} does not exist.
    */
-  @Override
   public void addArc(String id, String source, String target) {
     checkValidId(id);
     SimplePetriNode sourceNode;
@@ -132,25 +141,40 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Renames a {@code PetriNode}.
+   * 
+   * @param id   Unique ID of the {@code PetriNode} to be renamed.
+   * @param name New Name of the {@code PetriNode}.
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
-  @Override
   public void setNodeName(String id, String name) {
     getNode(id).setName(name);
   }
 
   /**
-   * {@inheritDoc}
+   * Sets position of a {@code PetriNode} to be used in a {@code View} of the
+   * {@code PetriNet}
+   * 
+   * @param id Unique ID of the {@code PetriNode} to be repositioned.
+   * @param x  x-coordinate of the {@code PetriNode}.
+   * @param y  y-coordinate of the {@code PetriNode}.
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
-  @Override
   public void setNodePosition(String id, int x, int y) {
     getNode(id).setPosition(x, y);
   }
 
   /**
-   * {@inheritDoc}
+   * Sets the number of initial tokens an a {@code PetriNode}.
+   * 
+   * @param id      Unique ID of the {@code PetriNode} to be modified.
+   * @param nTokens Number of Tokens that {@code PetriNode} shall have as its
+   *                initial token count.
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
-  @Override
   public void setInitialTokens(String id, int nTokens) {
     var p = getNode(id);
     if (!p.isPlace()) {
@@ -160,22 +184,31 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Collects the current token count of all places and returns it as a
+   * {@code Marking} object.
+   * 
+   * @return The current {@code Marking} of the {@code PetriNet}.
+   * @see de.feu.propra.reachability.Marking
    */
-  @Override
   public Marking getMarking() {
     var tokenCount = places.values().stream().map(Place::getTokenCount).toArray(Integer[]::new);
     return new Marking(tokenCount);
   }
 
   /**
-   * {@inheritDoc}
+   * Sets the current marking of the {@code PetriNet}. Is is not checked if that
+   * marking is possible to reach from the current initial marking. The tokens in
+   * the {@code Marking} are ordered alphabetically by ID of the {@code Place}s.
+   * 
+   * @param marking The new marking of the {@code PetriNet}.
+   * @throws IllegalArgumentException If the number of token counts in the given
+   *                                  {@code Marking} does not match the number of
+   *                                  {@code Place}s in the {@code PetriNet}.
    */
-  @Override
   public void setMarking(Marking m) {
     if (m.size() != places.size()) {
       throw new IllegalArgumentException();
-    }  
+    }
     if (m.equals(getMarking())) {
       return;
     }
@@ -188,9 +221,13 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Triggers a {@code Transition} to redistribute tokens. If the given id is not
+   * a {@code Transition}, the method does nothing.
+   * 
+   * @param id Unique ID of the {@code Transition} to be triggered.
+   * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
+   *                                  not found.
    */
-  @Override
   public void triggerTransition(String id) {
     if (!isTransition(id)) {
       return;
@@ -211,34 +248,41 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Tells if the the represented Petri Net is known to have an unlimited number
+   * of states it can reach. The return values only relies on already visited
+   * states. This method does not trigger an analysis.
+   * 
+   * @return True if none of the already visited markings indicate unboundedness.
+   *         False otherwise.
    */
-  @Override
   public boolean isBounded() {
     return rGraph.isBounded();
   }
 
   /**
-   * {@inheritDoc}
+   * @return An unmodifiable collection of all {@code PetriNode}s of the
+   *         {@code PetriNet}.
    */
-  @Override
   public Collection<PetriNode> nodes() {
     var nodes = Stream.concat(places.values().stream(), transitions.values().stream()).collect(Collectors.toList());
     return Collections.unmodifiableCollection(nodes);
   }
 
   /**
-   * {@inheritDoc}
+   * @return An unmodifiable collection of all {@code Arc}s of the
+   *         {@code PetriNet}.
    */
-  @Override
   public Collection<Arc> arcs() {
     return Collections.unmodifiableCollection(arcs.values());
   }
 
   /**
-   * {@inheritDoc}
+   * Increases the initial token count of a {@code Place} by one. Does nothing if
+   * a {@code Place} with the given ID is not present in the {@code PetriNet}
+   * 
+   * @param id Unique ID of the {@code PetriNode} to be modified.
+   * @return True of success, false if not.
    */
-  @Override
   public boolean addToken(String id) {
     if (!places.containsKey(id)) {
       return false;
@@ -248,9 +292,12 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Decreases the initial token count of a {@code Place} by one. Does nothing if
+   * a {@code Place} with the given ID is not present in the {@code PetriNet}
+   * 
+   * @param id Unique ID of the {@code PetriNode} to be modified.
+   * @return True of success, false if not.
    */
-  @Override
   public boolean removeToken(String id) {
     if (!places.containsKey(id)) {
       return false;
@@ -266,9 +313,9 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Freezes the current marking and sets the current token count as the initial
+   * token count of each {@code Place}.
    */
-  @Override
   public void setCurrentMarkingAsInitial() {
     places.values().forEach(Place::setCurrentTokensAsInitial);
     isInInitialState = true;
@@ -276,27 +323,31 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Adds a {@code PropertyChangeListener} to each {@code PetriNode} of the
+   * {@code PetriNet}.
+   * 
+   * @param listener The listener to add to each {@code PetriNode}.
    */
-  @Override
   public void addNodePropertyChangeListener(PropertyChangeListener listener) {
     places.values().forEach(p -> p.addPropertyChangeListener(listener));
     transitions.values().forEach(t -> t.addPropertyChangeListener(listener));
   }
 
   /**
-   * {@inheritDoc}
+   * Removes a {@code PropertyChangeListener} from each {@code PetriNode} of the
+   * {@code PetriNet}.
+   * 
+   * @param listener The listener to remove from each {@code PetriNode}.
    */
-  @Override
   public void removeNodePropertyChangeListener(PropertyChangeListener listener) {
     places.values().forEach(p -> p.removePropertyChangeListener(listener));
     transitions.values().forEach(t -> t.removePropertyChangeListener(listener));
   }
 
   /**
-   * {@inheritDoc}
+   * Sets the current token count of each {@code Place} to its initial token
+   * count.
    */
-  @Override
   public void resetPlaces() {
     if (isInInitialState) {
       return;
@@ -307,9 +358,9 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * Reloads the properties (name, position, token count) of each
+   * {@code PetriNode} from the file, from which the {@code PetriNet} was created.
    */
-  @Override
   public void reload() {
     if (file == null) {
       logger.warning(bundle.getString("not_reloadable_warning"));
@@ -323,18 +374,19 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * @return The IDs of all active {@code Transition}s in the {@code PetriNet}.
    */
-  @Override
   public Collection<String> getActiveTransitionIds() {
     return transitions.values().stream().filter(Transition::isActive).map(Transition::getId)
         .collect(Collectors.toList());
   }
 
   /**
-   * {@inheritDoc}
+   * @param id Unique ID of the {@code PetriNode} to be checked.
+   * @return True if the given ID belongs to a {@code Transition}, false
+   *         otherwise.
+   * @throws ElementNotFoundException If there is no Element with the given ID.
    */
-  @Override
   public boolean isTransition(String id) {
     return getNode(id).isTransition();
   }
@@ -351,9 +403,8 @@ public class PetriNetImpl implements PetriNet {
   }
 
   /**
-   * {@inheritDoc}
+   * @return The child {@code ReachabilityGraph} that tracks all visited markings.
    */
-  @Override
   public ReachabilityGraph getReachabilityGraph() {
     return rGraph;
   }
