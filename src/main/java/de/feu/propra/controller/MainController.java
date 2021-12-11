@@ -1,6 +1,7 @@
 package de.feu.propra.controller;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +10,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-import de.feu.propra.petrinet.PetriNetImpl;
+import de.feu.propra.petrinet.PetriNet;
 import de.feu.propra.solver.BatchSolver;
 import de.feu.propra.solver.BoundednessSolver;
 import de.feu.propra.ui.MainView;
@@ -128,7 +129,7 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
     var tab = tabManager.addTab(file);
 
     var filename = file.getAbsolutePath();
-    var net = new PetriNetImpl(file);
+    var net = new PetriNet(file);
     var rGraph = net.getReachabilityGraph();
     var netController = new PetriNetController(net);
     var graphController = new ReachabilityGraphController(rGraph);

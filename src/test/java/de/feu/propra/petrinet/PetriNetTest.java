@@ -12,8 +12,8 @@ import de.feu.propra.controller.ReachabilityGraphChangeListener;
 import de.feu.propra.reachability.Marking;
 import de.feu.propra.util.DuplicateElementException;
 
-class PetriNetImplTest {
-  PetriNetImpl net;
+class PetriNetTest {
+  PetriNet net;
 
   @BeforeAll
   static void setUpBeforeClass() throws Exception {
@@ -25,7 +25,7 @@ class PetriNetImplTest {
 
   @BeforeEach
   void setUp() throws Exception {
-    net = new PetriNetImpl();
+    net = new PetriNet();
   }
 
   @AfterEach
