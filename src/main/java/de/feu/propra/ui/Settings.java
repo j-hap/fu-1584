@@ -91,7 +91,8 @@ public class Settings {
   }
 
   /**
-   * Changes the display language of the application. Requires restart.
+   * Changes the display language of the application. Requires restart to take effect
+   * on GUI elements. 
    * 
    * @param newLang The new display language.
    */

@@ -30,7 +30,6 @@ public class ReachabilityGraph {
   private Map<Marking, LinkedMarking> nodes;
   private List<Marking> unboundedMarkings;
   private boolean isBounded = true;
-
   private List<ReachabilityGraphChangeListener> listeners = new ArrayList<>();
 
   /**
