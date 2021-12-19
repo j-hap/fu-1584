@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.function.Function;
 import java.util.logging.Logger;
@@ -24,22 +25,58 @@ public class ResultsFormatter {
   private Appendable buffer;
   private List<List<String>> columns;
   private static final Logger logger = Logger.getLogger(PetriNetController.class.getName());
-  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
+  private ResourceBundle bundle;
 
-  /**
-   * Constructs a {@code ResultsFormatter} with a default {@code String} buffer.
-   */
-  public ResultsFormatter() {
-    this(new StringBuilder());
+  private ResultsFormatter(Locale l, Appendable a) {
+    buffer = a;
+    bundle = ResourceBundle.getBundle("langs.labels", l);
   }
 
   /**
-   * Constructs a {@code ResultsFormatter} with a given {@code String} buffer.
+   * Constructs a {@code ResultsFormatter} with a default {@code String} buffer
+   * and the currently configured {@code Locale}.
+   * 
+   * @see de.feu.propra.ui.Settings
+   */
+  public ResultsFormatter() {
+    this(Settings.getLocale(), new StringBuilder());
+  }
+
+  /**
+   * Constructs a {@code ResultsFormatter} with a default {@code String} buffer
+   * and the given {@code Locale}.
+   * 
+   * @param locale The {@code Locale} to be used.
+   */
+  public ResultsFormatter(Locale locale) {
+    this(locale, new StringBuilder());
+  }
+
+  /**
+   * Constructs a {@code ResultsFormatter} with a given {@code String} buffer and
+   * the currently configured {@code Locale}.
    * 
    * @param buffer The {@code Appendable} used a a String buffer.
+   * @see de.feu.propra.ui.Settings
    */
   public ResultsFormatter(Appendable buffer) {
-    this.buffer = buffer;
+    this(Settings.getLocale(), buffer);
+  }
+
+  /**
+   * Formats the given {@code List} of {@code BoundednessSolverResult} into a
+   * printable table using the given {@code Locale}.
+   * 
+   * @param locale  locale The {@code Locale} to be used.
+   * @param results The {@code List} of {@code BoundednessSolverResult} to format.
+   * @return A reference to the {@code ResultsFormatter}.
+   */
+  public ResultsFormatter format(Locale locale, List<BoundednessSolverResult> results) {
+    var oldBundle = bundle;
+    bundle = ResourceBundle.getBundle("langs.labels", locale);
+    var out = format(results);
+    bundle = oldBundle;
+    return out;
   }
 
   /**
@@ -61,12 +98,12 @@ public class ResultsFormatter {
     for (var c : columns) {
       padToMaxLength(c);
     }
-
+    
     try {
       putColumnsIntoBuffer();
     } catch (IOException e) {
       logger.severe("Failed to append to String buffer.");
-    }
+    }    
     return this;
   }
 
@@ -94,7 +131,7 @@ public class ResultsFormatter {
     padToMaxLength(col);
     appendWithLambda(col, results, r -> r.problemMarkings.get(0).toString() + ", ");
     padToMaxLength(col);
-    appendWithLambda(col, results, r -> r.problemMarkings.get(1).toString());
+    appendWithLambda(col, results, r -> r.problemMarkings.get(1).toString());    
   }
 
   private String[] getFormatStrings(List<BoundednessSolverResult> results) {
@@ -121,16 +158,16 @@ public class ResultsFormatter {
     final String SEPARATOR = " | ";
     var nRows = columns.get(0).size();
     for (int iRow = 0; iRow < nRows; ++iRow) {
-      if (iRow == nHeaderLines) {
-        buffer.append(getSeparationLine());
-        buffer.append("\n");
-      }
       var row = new ArrayList<String>(3);
       for (var c : columns) {
         row.add(c.get(iRow));
       }
       buffer.append(row.stream().collect(Collectors.joining(SEPARATOR)));
       buffer.append("\n");
+      if (iRow == (nHeaderLines - 1)) {
+        buffer.append(getSeparationLine());
+        buffer.append("\n");
+      }
     }
   }
 
@@ -164,16 +201,20 @@ public class ResultsFormatter {
   }
 
   private static void padToMaxLength(List<String> list) {
+    if (list.isEmpty()) {
+      // nothing to do
+      return;
+    }
     var padTo = list.stream().mapToInt(String::length).max().getAsInt();
     var fmt = "%-" + padTo + "s";
     list.replaceAll(s -> String.format(fmt, s));
   }
 
-  private static String boolean2String(boolean b) {
+  private String boolean2String(boolean b) {
     return (b ? bundle.getString("yes") : bundle.getString("no"));
   }
 
-  private static void prependHeader(List<List<String>> columns) {
+  private void prependHeader(List<List<String>> columns) {
     columns.get(0).addAll(0, Arrays.asList(new String[] { "", bundle.getString("Filename") }));
     columns.get(1).addAll(0, Arrays.asList(new String[] { "", bundle.getString("bounded") }));
     columns.get(2).addAll(0,

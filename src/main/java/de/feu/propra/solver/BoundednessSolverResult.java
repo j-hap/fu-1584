@@ -1,6 +1,7 @@
 package de.feu.propra.solver;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -38,7 +39,7 @@ public class BoundednessSolverResult {
    * The {@code Marking}s that violate the m &lt;-&gt; m' relation. Is null if the
    * {@code PetriNet} is bounded.
    */
-  public List<Marking> problemMarkings;
+  public List<Marking> problemMarkings = new ArrayList<>();
   /**
    * The list of visited {@code Transition}s in the {@code PetriNet} until a pair
    * of m &lt;-&gt; m' {@code Markings} was encountered. Is null if the
