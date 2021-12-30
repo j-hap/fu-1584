@@ -25,6 +25,5 @@ public class ZoomController implements MouseWheelListener {
     var zoomLevel = view.getCamera().getViewPercent();
     zoomLevel = Math.max(0, zoomLevel + zoomIncrement * direction);
     view.getCamera().setViewPercent(zoomLevel);
-    // TODO workaround for arrow tip position bug
   }
 }

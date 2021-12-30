@@ -136,10 +136,6 @@ public class MainView {
     toolBar.add(MainViewAction.DELETE_GRAPH.action);
     toolBar.add(MainViewAction.BOUNDS_CHECK.action);
 
-    // TODO
-//    var tb = new JToggleButton();
-//    var tb = toolBar.add(MainViewAction.TOGGLE_BOUNDS_CHECK.action);
-
     frame.add(toolBar, BorderLayout.PAGE_START);
   }
 
