@@ -184,7 +184,7 @@ public class MainView {
    * @param message The message to be shown in a popup.
    */
   public void showPopup(String message) {
-    JOptionPane.showMessageDialog(null, message, "Information", JOptionPane.INFORMATION_MESSAGE);
+    JOptionPane.showMessageDialog(frame, message, "Information", JOptionPane.INFORMATION_MESSAGE);
   }
 
   /**
