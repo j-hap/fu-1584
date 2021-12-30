@@ -38,8 +38,7 @@ public class PetriNet {
   private boolean isInInitialState = true;
   private File file;
   private static final Logger logger = Logger.getLogger((PetriNet.class.getName()));
-  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
-  private boolean unboundedWarningWasShown = false;
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());  
 
   /**
    * Constructor to start a new {@code PetriNetImpl} from scratch.
@@ -239,10 +238,6 @@ public class PetriNet {
     }
     t.trigger();
     rGraph.addMarking(id, t.getLabel(), oldMarking, getMarking());
-    if (Settings.isContinouusBoundednessCheckActive() && !unboundedWarningWasShown && !isBounded()) {
-      unboundedWarningWasShown = true;
-      logger.warning(bundle.getString("unbounded_info"));
-    }
     isInInitialState = false;
   }
 
@@ -365,10 +360,9 @@ public class PetriNet {
       logger.warning(bundle.getString("not_reloadable_warning"));
       return;
     }
-    // must reset all tokens to zero, because omittion in file
+    // must reset all tokens to zero, because omission in file
     // means 0 tokens
     places.values().forEach(p -> p.setInitialTokenCount(0));
-    unboundedWarningWasShown = false;
     loadFromFile(false);
   }
 

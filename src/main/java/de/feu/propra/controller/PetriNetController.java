@@ -46,6 +46,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   private Viewer viewer;
   private SpriteManager spriteManager;
   private boolean initialMarkingIsModified = false;
+  private boolean unboundedWarningWasShown = false;
   private static final Logger logger = Logger.getLogger(PetriNetController.class.getName());
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
   private static final String STYLESHEET = "url(" + GraphFactory.class.getResource("/styles/net.css") + ")";
@@ -137,6 +138,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
   public void setCurrentMarkingAsInitial() {
     net.setCurrentMarkingAsInitial();
     initialMarkingIsModified = true;
+    unboundedWarningWasShown = false;
   }
 
   /**
@@ -237,6 +239,10 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
       if (curElement != null) {
         var id = curElement.getId();
         net.triggerTransition(id);
+        if (Settings.isContinouusBoundednessCheckActive() && !unboundedWarningWasShown && !net.isBounded()) {
+          unboundedWarningWasShown = true;
+          logger.warning(bundle.getString("unbounded_info"));
+        }
         if (!me.isShiftDown()) {
           deselectAll();
         }
@@ -262,6 +268,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
    */
   public void reloadModel() {
     net.reload();
+    unboundedWarningWasShown = false;
   }
 
   /**
