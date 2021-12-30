@@ -32,10 +32,24 @@ Nachfolger-Stellen bekannt gemacht. Das Petri-Netz selbst gibt zum Schalten
 einer Transition nur der zu schaltenen Transition Bescheid. Die Umverteilung von
 Tokens geschieht dann auf Element-Ebene.
 
-\subsection{ReachabilityGraph}
+\subsubsection{Transition}
+Die Klasse \texttt{Transition} hält in zwei Sets die Vorgänger- und
+Nachfolger-Stellen dieser Transition. Da laut Aufgabenstellung keine doppelten
+Kanten in den Modellen zu erwarten sind, wurde das Set einer Liste vorgezogen.
 
+\subsubsection{Place}
+Zur Repräsentation einer Stelle im Petri-Netz dient die \texttt{Place}-Klasse.
+In einem Objekt dieser Klasse sind die aktuelle Anzahl Marken sowie die initiale
+Anzahl Marken hinterlegt. Die Klasse bietet Methoden zur Inkrementierung und
+Dekrementierung der aktuellen Marken, wobei die Validität (keine negative
+Anzahl, kein Integer Overflow) sichergestellt wird. Desweiteren informiert eine
+Objekt dieser Klasse eventuell vorhandene Listener über eine Änderung der
+aktuellen Makenanzahl. Dies wird genutzt, um die Darstellung des Netzes aktuell
+zu halten.
+
+\subsection{ReachabilityGraph}
 Die Klasse \texttt{ReachabilityGraph} bildet die Modell-Repräsentation eines
-Erreichbarkeitsgraphen in PetriCheck dar.
+Erreichbarkeitsgraphen in PetriCheck.
 
 Wegen der einfacheren Synchronisation erstellt jedes \texttt{PetriNet} Objekt
 bei seiner Erstellung direkt ein \texttt{ReachabilityGraph}-Objekt. So kann
@@ -68,7 +82,7 @@ Erreichbarkeitsgraphen als auch bei der Beschränktheitsanalyse dienlich ist
 
 Wie bei den \texttt{Marking}-Objekten gelten zwei Edges als gleich, wenn sie das
 gleiche Label und den gleichen Endknoten haben. Zwei Edge-Objekte liefern dann
-also auch den gleichen Hash-Wert, der zur Indentifikation in \texttt{HashSet}s
+also auch den gleichen Hash-Wert, der zur Identifikation in \texttt{HashSet}s
 genutzt wird. Dies ermöglicht die einfache Kontrolle, ob im Petri-Netz
 geschaltete Trasitionen schon im Netz vorhanden sind, auch wenn diese Kante
 durch ein separates Objekt repräsentiert wird.

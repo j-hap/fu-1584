@@ -1,5 +1,7 @@
 \section{Beschränktheits-Algorithmus}
 \label{sec:algo}
+
+\subsection{Beschränktheit des Erreichbarkeitsgraphen}
 Wie in \cref{sec:struct} beschrieben, hält jedes Petri-Netz seinen eigenen
 Erreichbarkeitsgraphen als Attribut. Beim Hinzufügen einer neuen Markierung in
 den Erreichbarkeitsgraphen, wird geprüft, ob es eine Markierung auf dem Weg zur
@@ -10,7 +12,7 @@ gerichtete Breitensuche mittelt der in einem \texttt{LinkedMarking} gehaltenen
 
 Sei \texttt{get\_predecessors} eine Methode um die Vorgänger-Knoten eines Knoten
 in einem Erreichbarkeitsgraphen zu erhalten. Der \texttt{\textgreater}-Operator
-führe für zwei Markierungen A und B den elementweisen vergleich der Token-Anzahl
+führe für zwei Markierungen A und B den elementweisen Vergleich der Token-Anzahl
 an jedem Index aus und gibt \texttt{true} zurück, wenn A an mindestens einer
 Position eine größere Token-Anzahl als B enthält und an allen anderen Stellen
 die Anzahl der Tokens gleich groß ist. %
@@ -36,9 +38,7 @@ Startmarkierung der Suche im Erreichbarkeitsgraphen vorhanden ist.
     return true
 \end{lstlisting}
 
-In der Warteschlange können die \texttt{LinkedMarking} dank Polymorphie als
-\texttt{Marking} verwendet werden.
-
+\subsection{Beschränktheit des Petri-Netzes}
 Um die (Un)Beschränktheit eines Petri-Netzes festzustellen, werden bei der
 Beschränktheitsanalyse so lang Transitionen geschaltet, bis entweder
 \begin{itemize}
@@ -85,8 +85,8 @@ Algorithmus lautet in Pseudocode:
 \begin{lstlisting}[language=python, morekeywords={do, algorithm, then}]
   algorithm is_bounded_rec(petri_net)
     last_marking = petri_net.get_marking()
-    for transition in get_active_transition_ids(petri_net) do
-      # call adds marking to r_graph and checks boundedness
+    for transition in get_active_transitions(petri_net) do
+      # this call adds marking to r_graph and checks boundedness
       petri_net.trigger_transition(transition)
       if not petri_net.r_graph.is_bounded or not is_bounded_rec(petri_net) then
         return false
@@ -94,8 +94,14 @@ Algorithmus lautet in Pseudocode:
     return true
 \end{lstlisting}
 
-\begin{figure}[ht]
-  \includegraphics[width=\textwidth]{../img/Screenshot_276_default_layout.png}
-  \label{img:ex276_default}
+Neben diesen Schritten wird in der Implementierung in PetriCheck noch der
+aktuell beschrittene Pfad dokumentiert und zwei ggf. gefundene in m
+$\leftrightarrow$ m' Relation stehende Markierungen für die Ausgabe gesichert.
+
+Die Ansicht des Programms nach der Beschränktheitsanalyse der Beispieldatei 276 zeigt \cref{img:ex276_default}.
+
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{../img/Screenshot_276_default_layout2.png}
   \caption{Beispieldatei 276 nach der Beschränktheitsanalyse}
+  \label{img:ex276_default}
 \end{figure}

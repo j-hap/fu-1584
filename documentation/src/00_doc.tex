@@ -36,6 +36,7 @@
 \lstset{style = mystyle}
 
 \usepackage{graphicx} % inclusion of external graphics with \includegraphics
+\usepackage{float} % figure placements
 
 \usepackage[ngerman, noabbrev]{cleveref} % referenced type name included in ref
 
@@ -44,11 +45,14 @@
 
 \begin{document}
 \maketitle
+\pagebreak
 \tableofcontents
+\pagebreak
 \input{01_intro}
 \input{02_manual}
 \input{03_structure}
 \input{04_algo}
+% \clearpage % forces all unset pictures before bibliography
 \printbibliography
 % \bibliographystyle{babplain-fl}
 % \bibliography{sources}
