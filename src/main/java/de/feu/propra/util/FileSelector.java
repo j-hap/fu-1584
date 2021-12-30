@@ -135,7 +135,8 @@ public class FileSelector implements ActiveFileChangeListener {
   }
 
   private void updateFileList() {
-    filesInCurrentDir = fileChooser.getCurrentDirectory().listFiles(file -> filter.accept(file));
+    // filter accepts directories, but we only want files
+    filesInCurrentDir = fileChooser.getCurrentDirectory().listFiles(file -> filter.accept(file) && file.isFile());
     Arrays.sort(filesInCurrentDir);
   }
 
