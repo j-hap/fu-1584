@@ -57,7 +57,7 @@ public final class Petricheck  {
 
   /**
    * Initialization for necessary classes
-   */  
+   */
   private static void createAndShowGui() {
     // no net loaded by default, so no graph actions
     MainViewAction.disableGraphActions();

@@ -1,13 +1,13 @@
 package de.feu.propra.ui;
 
 import java.awt.Frame;
-import java.io.File;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.prefs.Preferences;
 import java.util.regex.Pattern;
+
+import de.feu.propra.util.ResourceFinder;
 
 /**
  * Utility class that manages application settings.
@@ -43,8 +43,7 @@ public class Settings {
    *         are defined.
    */
   public static Locale[] getAvailableLanguages() {
-    var resource = Settings.class.getResource("/langs/");
-    var files = new File(resource.getPath()).list();
+    var files = ResourceFinder.getResourcesBelow("langs");
     var pattern = Pattern.compile("_[a-z]{2}(_[A-Z]{2})?\\.");
     // LinkedHashSet to alphabetic sorting
     Set<Locale> langs = new LinkedHashSet<Locale>();
@@ -76,23 +75,20 @@ public class Settings {
 
   /**
    * If no locale setting is present, the method tries to configure the default
-   * locale, of a resource bundle for that language is available. The fallback
-   * language is en_US.
+   * locale. If a resource bundle tries to use that locale and there are not
+   * property files, the fallback language is en_US.
    * 
    * @return The currently defined locale
    */
   public static Locale getLocale() {
     var defaultLocale = Locale.getDefault();
-    if (!Arrays.asList(getAvailableLanguages()).contains(defaultLocale)) {
-      defaultLocale = Locale.forLanguageTag("en_US");
-    }
     var localeString = prefs.get("Language", defaultLocale.toLanguageTag());
     return Locale.forLanguageTag(localeString);
   }
 
   /**
-   * Changes the display language of the application. Requires restart to take effect
-   * on GUI elements. 
+   * Changes the display language of the application. Requires restart to take
+   * effect on GUI elements.
    * 
    * @param newLang The new display language.
    */
