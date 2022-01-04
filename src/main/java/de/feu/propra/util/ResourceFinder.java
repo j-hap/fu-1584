@@ -12,6 +12,15 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Utility class to find available resources inside a running application. Can
+ * be used to e.g. find all available language resources, so a user can select
+ * the desired language without the need to hardcode the selection or have a
+ * seperate resource file with a list of languages.
+ * 
+ * @author j-hap 
+ *
+ */
 public class ResourceFinder {
   private static List<String> resources = new ArrayList<>();
 
@@ -73,7 +82,7 @@ public class ResourceFinder {
    * start with /.
    * 
    * @param subpath Files below this resource path are returned.
-   * @return
+   * @return An array of Strings of resources below the given path.
    */
   public static String[] getResourcesBelow(String subpath) {
     return resources.stream().filter(e -> e.startsWith(subpath)).toArray(String[]::new);
