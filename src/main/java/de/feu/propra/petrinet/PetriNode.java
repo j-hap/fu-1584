@@ -11,12 +11,12 @@ public interface PetriNode extends PetriElement {
   /**
    * @return The x-coordinate of the {@code PetriNode}
    */
-  int getXPos();
+  double getXPos();
 
   /**
    * @return The y-coordinate of the {@code PetriNode}
    */
-  int getYPos();
+  double getYPos();
 
   /**
    * @return The type of the {@code PetriNode}

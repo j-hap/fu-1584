@@ -160,7 +160,7 @@ public class PetriNet {
    * @throws ElementNotFoundException If a {@code PetriNode} with the given ID is
    *                                  not found.
    */
-  public void setNodePosition(String id, int x, int y) {
+  public void setNodePosition(String id, double x, double y) {
     getNode(id).setPosition(x, y);
   }
 

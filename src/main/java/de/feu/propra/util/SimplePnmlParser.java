@@ -150,8 +150,10 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
     if (skipProperties) {
       return;
     }
-    int xPos = Integer.valueOf(x);
-    int yPos = Integer.valueOf(y);
+    // according to https://www.pnml.org/papers/pnnl76.pdf
+    // the position values are "decimal", so can be non-integer
+    var xPos = Double.valueOf(x);
+    var yPos = Double.valueOf(y);
     try {
       net.setNodePosition(id, xPos, yPos);
     } catch (ElementNotFoundException e) {

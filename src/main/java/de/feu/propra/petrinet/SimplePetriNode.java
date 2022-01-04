@@ -10,8 +10,8 @@ import java.beans.PropertyChangeSupport;
  *
  */
 public abstract class SimplePetriNode extends SimplePetriElement implements PetriNode {
-  private int xpos;
-  private int ypos;
+  private double xpos;
+  private double ypos;
   private String name;
   private final NodeType type;
   /**
@@ -37,7 +37,7 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * @param x New x-coordinate of the {@code SimplePetriNode}.
    * @param y New y-coordinate of the {@code SimplePetriNode}.
    */
-  public void setPosition(int x, int y) {
+  public void setPosition(double x, double y) {
     // old value 0 because changes in the view aren't propagated, so the event
     // has to be forced;
     xpos = x;
@@ -95,7 +95,7 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * {@inheritDoc}
    */
   @Override
-  public int getXPos() {
+  public double getXPos() {
     return xpos;
   }
 
@@ -103,7 +103,7 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * {@inheritDoc}
    */
   @Override
-  public int getYPos() {
+  public double getYPos() {
     return ypos;
   }
 
