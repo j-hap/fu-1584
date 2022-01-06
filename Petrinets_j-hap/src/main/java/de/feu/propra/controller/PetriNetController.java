@@ -20,6 +20,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.swing_viewer.SwingViewer;
+import org.graphstream.ui.swing_viewer.util.DefaultMouseManager;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.util.InteractiveElement;
@@ -112,6 +113,53 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
     var panel = (JPanel) view;
     panel.addMouseWheelListener(new ZoomController());
     panel.addMouseListener(this);
+    panel.addMouseMotionListener(this);
+    enableRightMouseButtonDrag();
+  }
+
+  private void enableRightMouseButtonDrag() {
+    // disabled all default right mouse button actions. enables right click drag.
+    view.setMouseManager(new DefaultMouseManager() {
+      private MouseEvent lastRmbPress;
+
+      @Override
+      public void mousePressed(MouseEvent event) {
+        // masks RMB press
+        if (event.getButton() != MouseEvent.BUTTON3) {
+          super.mousePressed(event);
+          lastRmbPress = null;
+        } else {
+          lastRmbPress = event;
+        }
+      }
+
+      @Override
+      public void mouseReleased(MouseEvent event) {
+        // masks RMB release
+        if (event.getButton() != MouseEvent.BUTTON3) {
+          super.mouseReleased(event);
+          lastRmbPress = event;
+        }
+      }
+
+      @Override
+      public void mouseDragged(MouseEvent event) {
+        // Moves view center of {@code View} according to mouse drag distance.
+        if (lastRmbPress != null) {
+          var cam = view.getCamera();
+          var oldCenter = cam.getViewCenter();
+          var viewCenterInPixels = cam.transformGuToPx(oldCenter.x, oldCenter.y, 0);
+          var dx = lastRmbPress.getX() - event.getX();
+          var dy = lastRmbPress.getY() - event.getY();
+          viewCenterInPixels.move(dx, dy);
+          var newCenter = cam.transformPxToGu(viewCenterInPixels.x, viewCenterInPixels.y);
+          cam.setViewCenter(newCenter.x, newCenter.y, 0);
+          lastRmbPress = event;
+        } else {
+          super.mouseDragged(event);
+        }
+      }
+    });
   }
 
   /**
@@ -199,10 +247,10 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
       spriteManager.getSprite(node.getId()).setAttribute("label", (String) evt.getNewValue());
       break;
     case "XPos":
-      graph.getNode(node.getId()).setAttribute("x", (Integer) evt.getNewValue());
+      graph.getNode(node.getId()).setAttribute("x", (Double) evt.getNewValue());
       break;
     case "YPos":
-      graph.getNode(node.getId()).setAttribute("y", -(Integer) evt.getNewValue());
+      graph.getNode(node.getId()).setAttribute("y", -(Double) evt.getNewValue());
       break;
     }
   }
@@ -225,29 +273,29 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
 
   /**
    * Handles clicks in the {@code View}. Used to forward trigger actions of
-   * {@code Transition}s and handle selection of {@code Place}s.
-   *
+   * {@code Transition}s and handle selection of {@code Place}s. {@inheritDoc}
    */
   @Override
   public void mouseClicked(MouseEvent me) {
     // only care for pressed / released in the same spot -> clicked
     // but the graphstream ViewerListener only supports press and release
     // events
-    if (me.getButton() == 1) {
-      var types = EnumSet.of(InteractiveElement.NODE);
-      var curElement = view.findGraphicElementAt(types, me.getX(), me.getY());
-      if (curElement != null) {
-        var id = curElement.getId();
-        net.triggerTransition(id);
-        if (Settings.isContinouusBoundednessCheckActive() && !unboundedWarningWasShown && !net.isBounded()) {
-          unboundedWarningWasShown = true;
-          logger.warning(bundle.getString("unbounded_info"));
-        }
-        if (!me.isShiftDown()) {
-          deselectAll();
-        }
-        graph.getNode(id).setAttribute("ui.selected");
+    if (me.getButton() != MouseEvent.BUTTON1) {
+      return;
+    }
+    var types = EnumSet.of(InteractiveElement.NODE);
+    var curElement = view.findGraphicElementAt(types, me.getX(), me.getY());
+    if (curElement != null) {
+      var id = curElement.getId();
+      net.triggerTransition(id);
+      if (Settings.isContinouusBoundednessCheckActive() && !unboundedWarningWasShown && !net.isBounded()) {
+        unboundedWarningWasShown = true;
+        logger.warning(bundle.getString("unbounded_info"));
       }
+      if (!me.isShiftDown()) {
+        deselectAll();
+      }
+      graph.getNode(id).setAttribute("ui.selected");
     }
   }
 

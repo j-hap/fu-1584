@@ -137,19 +137,20 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   private void disableSelectionRectangle() {
+    // disables all node selection, but keeps ability to drag nodes
+    // around. enables right click drag.
     view.setMouseManager(new DefaultMouseManager() {
-
-      @Override
-      public void mouseDragged(MouseEvent event) {
-        // let's user drag nodes but not select multiple
-        if (curElement != null) {
-          elementMoving(curElement, event);
-        }
-      }
+      private MouseEvent lastRmbPress;
 
       @Override
       public void mousePressed(MouseEvent event) {
         view.requireFocus();
+        if (event.getButton() == MouseEvent.BUTTON3) {
+          // stores last position to handle drag
+          lastRmbPress = event;
+          return;
+        }
+        lastRmbPress = null;
         var types = EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE);
         curElement = view.findGraphicElementAt(types, event.getX(), event.getY());
       }
@@ -157,6 +158,24 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
       @Override
       public void mouseReleased(MouseEvent event) {
         curElement = null;
+      }
+
+      @Override
+      public void mouseDragged(MouseEvent event) {
+        // let's user drag nodes but not select.
+        if (curElement != null) {
+          elementMoving(curElement, event);
+        } else if (lastRmbPress != null) {
+          var cam = view.getCamera();
+          var oldCenter = cam.getViewCenter();
+          var viewCenterInPixels = cam.transformGuToPx(oldCenter.x, oldCenter.y, 0);
+          var dx = lastRmbPress.getX() - event.getX();
+          var dy = lastRmbPress.getY() - event.getY();
+          viewCenterInPixels.move(dx, dy);
+          var newCenter = cam.transformPxToGu(viewCenterInPixels.x, viewCenterInPixels.y);
+          cam.setViewCenter(newCenter.x, newCenter.y, 0);
+          lastRmbPress = event;
+        }
       }
     });
   }
