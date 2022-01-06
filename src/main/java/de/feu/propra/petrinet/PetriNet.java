@@ -38,7 +38,7 @@ public class PetriNet {
   private boolean isInInitialState = true;
   private File file;
   private static final Logger logger = Logger.getLogger((PetriNet.class.getName()));
-  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());  
+  private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
   /**
    * Constructor to start a new {@code PetriNetImpl} from scratch.

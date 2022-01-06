@@ -98,12 +98,12 @@ public class ResultsFormatter {
     for (var c : columns) {
       padToMaxLength(c);
     }
-    
+
     try {
       putColumnsIntoBuffer();
     } catch (IOException e) {
       logger.severe("Failed to append to String buffer.");
-    }    
+    }
     return this;
   }
 
@@ -131,7 +131,7 @@ public class ResultsFormatter {
     padToMaxLength(col);
     appendWithLambda(col, results, r -> r.problemMarkings.get(0).toString() + ", ");
     padToMaxLength(col);
-    appendWithLambda(col, results, r -> r.problemMarkings.get(1).toString());    
+    appendWithLambda(col, results, r -> r.problemMarkings.get(1).toString());
   }
 
   private String[] getFormatStrings(List<BoundednessSolverResult> results) {

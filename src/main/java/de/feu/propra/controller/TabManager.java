@@ -21,7 +21,7 @@ public interface TabManager {
    * tab is open but does not contain any information, it is replaced by the new
    * tab.
    * 
-   * @param file      The file to which the new tab is associated
+   * @param file The file to which the new tab is associated
    * @return The created {@code SwingTab}
    */
   SwingTab addTab(File file);

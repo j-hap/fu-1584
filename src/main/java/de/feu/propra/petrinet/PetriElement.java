@@ -8,12 +8,12 @@ package de.feu.propra.petrinet;
  */
 public interface PetriElement {
   /**
-   * @return The ID of the {@code PetriElement}. 
+   * @return The ID of the {@code PetriElement}.
    */
   String getId();
 
   /**
-   * @return The label of the {@code PetriElement}. 
-   */  
+   * @return The label of the {@code PetriElement}.
+   */
   String getLabel();
 }

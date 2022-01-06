@@ -81,7 +81,7 @@ public class Transition extends SimplePetriNode implements PropertyChangeListene
       try {
         place.removeToken();
       } catch (IllegalStateException e) {
-        // roll back, can only happen if two transitions try to 
+        // roll back, can only happen if two transitions try to
         // remove tokens on separate threads, otherwise
         // the transition could not have been triggered
         returnTokens(place);
