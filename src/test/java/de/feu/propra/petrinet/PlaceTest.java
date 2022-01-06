@@ -62,7 +62,7 @@ class PlaceTest {
       place.removeToken();
     });
   }
-  
+
   @Test
   void doesNotAllowInitialNegativeTokenCount() {
     assertThrows(IllegalStateException.class, () -> {
