@@ -38,8 +38,8 @@ public abstract class SimplePetriNode extends SimplePetriElement implements Petr
    * @param y New y-coordinate of the {@code SimplePetriNode}.
    */
   public void setPosition(double x, double y) {
-    // old value 0 because changes in the view aren't propagated, so the event
-    // has to be forced;
+    // old value 0 because changes in the view aren't propagated back here, so the
+    // event has to be forced.
     xpos = x;
     ypos = y;
     pcs.firePropertyChange("XPos", 0, x);

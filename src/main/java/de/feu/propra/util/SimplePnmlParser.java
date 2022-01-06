@@ -152,6 +152,8 @@ public class SimplePnmlParser extends PNMLWopedParser implements PnmlParser {
     }
     // according to https://www.pnml.org/papers/pnnl76.pdf
     // the position values are "decimal", so can be non-integer
+    // Graphstream can't handle BigDecimal like org.apache.xmlbeans.XmlDecimal uses,
+    // so double must do.
     var xPos = Double.valueOf(x);
     var yPos = Double.valueOf(y);
     try {
