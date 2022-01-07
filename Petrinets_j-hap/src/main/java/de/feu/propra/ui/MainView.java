@@ -5,6 +5,7 @@ import java.awt.Cursor;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -84,7 +85,9 @@ public class MainView {
     fileMenu.add(MainViewAction.NEXT_FILE.action);
     fileMenu.add(MainViewAction.RELOAD_FILE.action);
     var closeMenuItem = fileMenu.add(MainViewAction.CLOSE_FILE.action);
-    var keyStrokeToClose = KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK);
+    // platform dependent modifier instead of CTRL, see
+    // https://stackoverflow.com/questions/4209975/how-to-have-command-w-close-a-window-on-mac-os-in-java-or-clojure
+    var keyStrokeToClose = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     closeMenuItem.setAccelerator(keyStrokeToClose);
 
     closeMenuItem.setMnemonic(KeyEvent.VK_W);
