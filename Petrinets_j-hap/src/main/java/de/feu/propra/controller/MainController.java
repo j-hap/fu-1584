@@ -174,6 +174,9 @@ public class MainController implements ActionListener, ActiveFileChangeListener 
 
   private void solveBatch() {
     var files = fileSelector.getUserSelectionMulti();
+    if (files.length == 0) {
+      return;
+    }
     var solver = new BatchSolver(files);
     mainView.showWaitCursor();
     solver.solve();
