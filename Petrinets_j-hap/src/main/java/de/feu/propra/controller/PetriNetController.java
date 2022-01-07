@@ -320,6 +320,7 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
    */
   public void reloadModel() {
     net.reload();
+    initialMarkingIsModified = false;
     unboundedWarningWasShown = false;
   }
 
