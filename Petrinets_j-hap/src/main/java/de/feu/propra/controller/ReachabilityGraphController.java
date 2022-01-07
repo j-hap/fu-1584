@@ -61,7 +61,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
   }
 
   /**
-   * Reinitializes the controlled {@code ReachabilityGraph}.
+   * Reinitializes the controlled {@code ReachabilityGraph} and resets the view
    */
   public void clearModel() {
     model.init();
