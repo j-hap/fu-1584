@@ -1,4 +1,4 @@
-\section{Bedienungsanleitung}
+\section{Funktionen}
 Neben den in der Aufgabenstellung geforderten Funktionen der Anwendung wurden
 einige vorgeschlagene Zusatzfunktionen implementiert:
 \begin{itemize}
@@ -9,10 +9,10 @@ einige vorgeschlagene Zusatzfunktionen implementiert:
 Diese und darüber hinausgehende Funktionen der Anwendung werden in den folgenden
 Unterabschnitten beschrieben.
 
-\subsection{Tab Interface}
-Die Untersuchung und Bearbeitung von mehreren Petri-Netzen gleichzeitig ist mit
-Petri-Check durch ein Tab Interface ermöglicht. Jedes Petri-Netz wird dabei in
-einem eigenen Tab, wie in modernen Web-Browsern, angezeigt.
+\subsection{Tabbed Document Interface}
+Die Untersuchung und Bearbeitung von mehreren Petri-Netzen gleichzeitig ist in
+PetriCheck durch ein Tabbed Document Interface möglich. Jedes Petri-Netz wird
+dabei in einem eigenen Tab, wie in modernen Web-Browsern, angezeigt.
 
 Nach dem Start von PetriCheck wird dem Anwendy die in \cref{img:default_window}
 gezeigte Bedienoberfläche präsentiert.
@@ -23,7 +23,7 @@ gezeigte Bedienoberfläche präsentiert.
   \label{img:default_window}
 \end{figure}
 
-Es ist kein Petri-Netz geöffnet, es wird aber ein Default-Tab angeboten, der
+Es ist kein Petri-Netz geöffnet, es wird aber ein Default-Tab angezeigt, der
 über einen vergrößerten Textausgabebereich verfügt. Dieser Bereich ist für die
 Ausgabe der Ergebnisse einer Beschränktheitsanalyse mehrerer Dateien vorgesehen,
 die auch ausgeführt werden kann, wenn kein Petri-Netz geöffnet ist.
@@ -36,8 +36,7 @@ Wegen der Möglichkeit mehrere Dateien gleichzeitig zu öffnen, ist in jedem
 Dateiauswahldialog eine Mehrfachauswahl von PNML-Dateien möglich. Jede Datei
 wird dann in einem eigenen Tab geöffnet. Ist eine ausgewählte Datei bereits
 geöffnet, wird sie nicht erneut geöffnet, sondern der mit dieser Datei
-assoziierte Tab aktiviert. Das Inhalts-Panel des Tabs wird durch die Klasse
-\texttt{SwingTab} implementiert.
+assoziierte Tab aktiviert.
 
 Um einen Tab und das darin enthaltene Petri-Netz zu schließen, existiert
 einerseits der Menüpunkt \emph{Datei $\rightarrow$ Schließen}. Andererseits
@@ -47,17 +46,6 @@ Button. Ein Klick auf diesen Button verursacht ebenfalls das Schließen des
 entsprechenden Tabs. Wird jedoch der letzte Tab geschlossen, wird standardmäßig
 ein leerer Default-Tab, wie in \cref{img:default_window} dargestellt, erzeugt,
 um eine Ausgabemöglichkeit für die Stapelverarbeitung mehrerer Dateien zu haben.
-
-Die Verwaltung der Tabs und die Assiziation der Tabs mit den geöffneren Dateien
-übernimmt ein Objekt der Klasse \texttt{TabManager} bzw. ein Objekt der auf das
-Swing-Framework spezialisierten Klasse \texttt{SwingTabManager}. Da keine Datei
-doppelt geöffnet werden kann, verwaltet ein \texttt{SwingTabManager} die
-offnenen Tabs in Maps, um Tabs mit absoluten Dateinamen und umgekehrt zu
-assizieren. Außerdem benachritigt ein \texttt{TabManager} eventuell vorhandene
-Listener-Objekte über ein umschalten des aktiven Tabs durch den Nutzer.
-
-Zusätzlich kümmert sich der TabManager darum, dass im globalen Logger das
-Textfeld des jeweils aktiven Tab als Ausgabe genutzt wird.
 
 \subsection{Mehrsprachigkeit}
 Die Sprache der Bedienoberfläche kann verändert werden (siehe
@@ -71,7 +59,7 @@ Um eine im Vergleich zum Betriebssystem einheitliche Optik zu erreichen,
 versucht PetriCheck das Look-and-Feel des Swing Frameworks an das des
 Betriebssystems anzupassen. Nur wenn diese Anpassung scheitert, weil Swing z.B.
 das aktuelle Betriebssystem nicht unterstützt, dient die etwas historisch
-anmutende Standardoptik von Swing als Rückfallebene.
+anmutende Standardoptik von Swing als Rück\-fall\-ebene.
 
 \subsection{Kontinuierliche Beschränktheitsanalyse}
 Ein Anwendy kann während des interaktiven Schaltens über die Unbeschränktheit
@@ -81,9 +69,6 @@ deaktiviert werden. Die Warnung erscheint nur einmalig und nicht bei jedem
 Schalten nachdem die Unbeschränktheit erkannt wurde. Wird die initiale
 Markierung der Petri-Netzes verändert oder das Petri-Netz erneut aus der Datei
 eingelesen, wird die Warnung ggf. erneut ausgegeben.
-
-Implementiert ist diese Funktionalität im \texttt{PetriNetController}, damit die
-Warnung nur während des interaktiven Schaltens des Netzes emittiert wird.
 
 \subsection{Hierarchisches Layout des Erreichbarkeitsgraphen}
 Neben dem automatischen \emph{SpringBox} Layout der GraphStream Bibliothek, kann
@@ -106,6 +91,18 @@ Erreichbarkeitsgraphen mit dem \emph{HierarchyLayout} dargestellt.
   \label{img:ex178_hierarchy}
 \end{figure}
 
+\subsection{Erweiterte Mausbedienung}
+Wie in der Aufgabenstellung gefordert, kann mit dem Mausrad in die Ansicht eines
+Graphen gezoomt werden. Neben der Änderung des Zoom-Levels, wird die Mitte der
+Ansicht derart verschoben, dass der Mauszeiger seine Position relativ zum
+Graphen beibehält. Dieses Verhalten sind Anwendys zum Beispiel in Programmen der
+Bildbetrachtung und -bearbeitung gewohnt.
+
+Desweiteren wurde dafür gesorgt, dass Verschieben eines Graphen ebenfalls mit
+der Maus möglich ist. Wird die rechte Maustaste auf einem Graphen geklickt und
+der Mauszeiger bei gedrückte Taste bewegt, so wird der darunterliegende Graph
+entsprechend verschoben.
+
 \subsection{Einstellungen}
 \label{sec:settings}
 Nach dem Aufruf des Menüpunkt \emph{Extras $\rightarrow$ Einstellungen\ldots}
@@ -114,7 +111,7 @@ wird der in \cref{img:settings} dargestellt Dialog gezeigt.
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.3\textwidth]{../img/settings.png}
-  \caption{Programmfenster nach dem Start}
+  \caption{Einstellungs-Dialog}
   \label{img:settings}
 \end{figure}
 
@@ -125,14 +122,3 @@ Layout der Darstellung des Erreichbarkeitsgraphen eingestellt werden. Die
 Änderung des Layouts des Erreichbarkeitsgraphen bedarf einer Neuerstellung des
 Graphen, entweder durch Ausführen der Beschränktheitsanalyse oder Löschen des
 aktuellen partiellen Erreichbarkeitsgraphen.
-
-\subsection{Erweiterte Mausbedienung}
-Wie in der Aufgabenstellung gefordert, kann mit dem Mausrad in die Ansicht eines
-Graphen gezoomt werden. Neben der Änderung des Zoom-Levels, wird die Mitte der
-Ansicht derart verschoben, dass der Mauszeiger seine Position relativ zum
-Graphen beibehält. Dieses Verhalten sind Anwendys zum Beispiel in Programmen der
-Bildbetrachtung und -bearbeitung gewohnt.
-
-Desweiteren wurde dafür gesorgt, dass Verschieben eines Graphen ebenfalls mit
-der Maus möglich ist. Wird die rechter Maustaste auf einem Graphen geklickt und
-die Maus bewegt, so wird der darunterliegende Graph mit verschoben.
