@@ -99,8 +99,10 @@ public class InfoDialog {
    *               hides the {@code Dialog}.
    */
   public void setVisible(boolean status) {
-    // must reset position in case parent moved while dialog was hidden
-    dialog.setLocationRelativeTo(parent); 
+    if (status) {
+      // must reset position in case parent moved while dialog was hidden
+      dialog.setLocationRelativeTo(parent);
+    }
     dialog.setVisible(status);
   }
 }
