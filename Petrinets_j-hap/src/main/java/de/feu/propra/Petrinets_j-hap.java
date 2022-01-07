@@ -3,8 +3,6 @@ package de.feu.propra;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.StreamHandler;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -50,9 +48,10 @@ public final class Petricheck  {
    * Initializes the default logger to print all messages to sysout
    */
   private static void setupLogging() {
-    var handler = new StreamHandler(System.out, new SimpleFormatter());
-    handler.setLevel(Level.ALL);
-    Logger.getLogger("").addHandler(handler);
+    var defaultHandlers = Logger.getLogger("").getHandlers();
+    for (var h : defaultHandlers) {
+      h.setLevel(Level.ALL);      
+    }
   }
 
   /**
