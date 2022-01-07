@@ -188,6 +188,10 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
    * Freezes the current marking of the {@code PetriNet} as the initial marking.
    */
   public void setCurrentMarkingAsInitial() {
+    if (net.isInInitialState()) {
+      logger.info(bundle.getString("current_marking_is_initial"));
+      return;
+    }
     net.setCurrentMarkingAsInitial();
     initialMarkingIsModified = true;
     unboundedWarningWasShown = false;

@@ -282,6 +282,7 @@ public class PetriNet {
       return false;
     }
     places.get(id).addToken();
+    isInInitialState = false;
     return true;
   }
 
@@ -299,6 +300,7 @@ public class PetriNet {
     var p = places.get(id);
     if (p.hasTokens()) {
       p.removeToken();
+      isInInitialState = false;
       return true;
     } else {
       logger.warning(bundle.getString("Place") + " " + id + " " + bundle.getString("out_of_tokens") + ".");
@@ -396,6 +398,10 @@ public class PetriNet {
   }
 
   /**
+   * Exposes the underlying {@code ReachabilityGraph} to a caller. Intended to be
+   * used when the model is needed in non-interactive calculations or is passed to
+   * a controller.
+   * 
    * @return The child {@code ReachabilityGraph} that tracks all visited markings.
    */
   public ReachabilityGraph getReachabilityGraph() {
@@ -407,5 +413,13 @@ public class PetriNet {
       throw new DuplicateElementException(String.format(bundle.getString("id_in_use_warning"), id));
     }
     ids.add(id);
+  }
+
+  /**
+   * Tells the caller if the current marking is the stored initial marking.
+   * @return True if the current marking is the initial marking, false otherwise
+   */
+  public boolean isInInitialState() {
+    return isInInitialState;
   }
 }
