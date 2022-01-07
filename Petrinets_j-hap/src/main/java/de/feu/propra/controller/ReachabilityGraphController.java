@@ -65,6 +65,7 @@ public class ReachabilityGraphController extends MouseAdapter implements Reachab
    */
   public void clearModel() {
     model.init();
+    view.getCamera().resetView();
   }
 
   private void initMarkingsMap(Marking initialMarking) {
