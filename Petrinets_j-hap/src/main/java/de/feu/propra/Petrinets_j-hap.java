@@ -45,7 +45,7 @@ public final class Petricheck  {
   }
 
   /**
-   * Initializes the default logger to print all messages to sysout
+   * Changes the default console loggers output level.
    */
   private static void setupLogging() {
     var defaultHandlers = Logger.getLogger("").getHandlers();
