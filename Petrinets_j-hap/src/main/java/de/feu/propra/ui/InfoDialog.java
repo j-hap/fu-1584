@@ -25,6 +25,7 @@ import de.feu.propra.util.SystemInfo;
  */
 public class InfoDialog {
   private JDialog dialog;
+  private Frame parent;
   private static final ResourceBundle bundle = ResourceBundle.getBundle("langs.labels", Settings.getLocale());
 
   /**
@@ -33,6 +34,7 @@ public class InfoDialog {
    * @param parent The {@code Frame} over which the Frame shall be displayed.
    */
   public InfoDialog(Frame parent) {
+    this.parent = parent;
     var labels = Box.createVerticalBox();
     labels.add(new JLabel(bundle.getString("cwd") + ":"));
     labels.add(new JLabel(bundle.getString("Used") + " Java Version:"));
@@ -87,7 +89,6 @@ public class InfoDialog {
     dialog.pack();
     dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
     dialog.setResizable(false);
-    dialog.setLocationRelativeTo(parent);
   }
 
   /**
@@ -98,6 +99,8 @@ public class InfoDialog {
    *               hides the {@code Dialog}.
    */
   public void setVisible(boolean status) {
+    // must reset position in case parent moved while dialog was hidden
+    dialog.setLocationRelativeTo(parent); 
     dialog.setVisible(status);
   }
 }
