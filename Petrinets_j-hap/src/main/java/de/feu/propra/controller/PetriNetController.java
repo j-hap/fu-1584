@@ -156,6 +156,10 @@ public class PetriNetController extends MouseAdapter implements PropertyChangeLi
           cam.setViewCenter(newCenter.x, newCenter.y, 0);
           lastRmbPress = event;
         } else {
+          // removed clicked status when beginning to drag
+          if (curElement!= null) {
+            curElement.removeAttribute("ui.clicked");
+          }
           super.mouseDragged(event);
         }
       }
