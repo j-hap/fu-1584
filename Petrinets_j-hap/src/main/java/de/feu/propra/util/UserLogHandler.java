@@ -66,7 +66,7 @@ public class UserLogHandler extends Handler {
    */
   public void restoreDefaultColors() {
     setLevelColor(Level.SEVERE, Color.RED);
-    setLevelColor(Level.WARNING, new Color(255, 204, 0));
+    setLevelColor(Level.WARNING, new Color(240, 140, 5));
     setLevelColor(Level.INFO, Color.BLACK);
     setLevelColor(Level.CONFIG, Color.BLACK);
     setLevelColor(Level.FINE, Color.DARK_GRAY);
@@ -105,6 +105,7 @@ public class UserLogHandler extends Handler {
       @Override
       public void run() {
         SimpleAttributeSet attributes = new SimpleAttributeSet();
+        StyleConstants.setBold(attributes, record.getLevel().intValue() > Level.INFO.intValue());
         StyleConstants.setForeground(attributes, levelColors.get(record.getLevel()));
         var s = getFormatter().format(record);
         var doc = outputPane.getDocument();
