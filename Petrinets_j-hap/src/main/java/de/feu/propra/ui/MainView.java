@@ -6,6 +6,7 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ResourceBundle;
@@ -18,6 +19,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 
 /**
  * The Main Window of the application as composition of Swing components.
@@ -81,7 +83,11 @@ public class MainView {
     fileMenu.add(MainViewAction.PREVIOUS_FILE.action);
     fileMenu.add(MainViewAction.NEXT_FILE.action);
     fileMenu.add(MainViewAction.RELOAD_FILE.action);
-    fileMenu.add(MainViewAction.CLOSE_FILE.action);
+    var closeMenuItem = fileMenu.add(MainViewAction.CLOSE_FILE.action);
+    var keyStrokeToClose = KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK);
+    closeMenuItem.setAccelerator(keyStrokeToClose);
+
+    closeMenuItem.setMnemonic(KeyEvent.VK_W);
     fileMenu.addSeparator();
     fileMenu.add(MainViewAction.BATCH.action);
     fileMenu.addSeparator();
