@@ -98,7 +98,7 @@ public class Transition extends SimplePetriNode implements PropertyChangeListene
 
   /**
    * Takes a token from all predecessors and gives a token to all successors. Does
-   * nothing then {@code Transition} is not active.
+   * nothing when {@code Transition} is not active.
    * 
    * @see Transition#isActive
    */
